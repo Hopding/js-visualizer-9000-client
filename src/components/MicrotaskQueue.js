@@ -31,6 +31,7 @@ const styles = theme => ({
     paddingRight: theme.spacing.unit * 1,
     margin: theme.spacing.unit,
     display: 'inline-block',
+    textAlign: 'center',
   },
 });
 

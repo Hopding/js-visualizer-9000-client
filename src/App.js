@@ -5,6 +5,12 @@ import AppRoot from './AppRoot';
 
 const pause = (millis) => new Promise(resolve => setTimeout(resolve, millis));
 
+const isNotIgnoredEvent = ({ type }) => [
+  'EnterFunction', 'ExitFunction',
+  'EnqueueMicrotask', 'DequeueMicrotask',
+  'InitTimeout', 'BeforeTimeout',
+].includes(type)
+
 class App extends Component {
   state = {
     frames: [
@@ -36,6 +42,7 @@ class App extends Component {
     markers: [],
     mode: 'editing', // 'editing' | 'running' | 'visualizing'
     code: '',
+    isAutoPlaying: false,
   };
 
   currEventIdx: number = 0;
@@ -70,7 +77,14 @@ class App extends Component {
   }
 
   handleClickEdit = () => {
-    this.setState({ mode: 'editing', markers: [] });
+    this.setState({
+      mode: 'editing',
+      frames: [],
+      tasks: [],
+      microtasks: [],
+      markers: [],
+      isAutoPlaying: false,
+    });
   }
 
   handleClickRun = () => {
@@ -82,6 +96,7 @@ class App extends Component {
       tasks: [],
       microtasks: [],
       markers: [],
+      isAutoPlaying: false,
     });
 
     try {
@@ -105,18 +120,17 @@ class App extends Component {
     }
   }
 
+  indexOfNextEvent = () => this.events
+    .slice(this.currEventIdx)
+    .findIndex(isNotIgnoredEvent);
+
+  hasReachedEnd = () => this.indexOfNextEvent() === -1;
+
   playNextEvent = () => {
     const { markers } = this.state;
 
-    const isNotIgnoredEvent = ({ type }) => [
-      'EnterFunction', 'ExitFunction',
-      'EnqueueMicrotask', 'DequeueMicrotask',
-      'InitTimeout', 'BeforeTimeout',
-    ].includes(type)
-
-    const idx = this.events
-      .slice(this.currEventIdx)
-      .findIndex(isNotIgnoredEvent);
+    const idx = this.indexOfNextEvent();
+    if (idx === -1) return true;
     this.currEventIdx = this.currEventIdx + idx;
 
     const {
@@ -133,26 +147,39 @@ class App extends Component {
       this.popCallStackFrame();
     }
     if (type === 'EnqueueMicrotask') {
-      this.enqueueMicrotask(`Microtask(${name})`);
+      // this.enqueueMicrotask(`Microtask(${name})`);
+      this.enqueueMicrotask(name);
     }
     if (type === 'DequeueMicrotask') {
       this.dequeueMicrotask();
     }
     if (type === 'InitTimeout') {
-      this.enqueueTask(id, `Task(${callbackName})`);
+      // this.enqueueTask(id, `Task(${callbackName})`);
+      this.enqueueTask(id, callbackName);
     }
     if (type === 'BeforeTimeout') {
       this.dequeueTask(id);
     }
 
     this.currEventIdx += 1;
+    return false;
   }
 
-  autoPlayEvents = async () => {
-    while (this.currEventIdx < this.events.length && this.state.mode === 'visualizing') {
-      this.playNextEvent();
-      await pause(500);
-    }
+  autoPlayEvents = () => {
+    this.setState({ isAutoPlaying: true }, async () => {
+      while (
+        this.currEventIdx < this.events.length &&
+        this.state.mode === 'visualizing' &&
+        this.state.isAutoPlaying
+      ) {
+        const endReached = this.playNextEvent();
+        if (endReached) {
+          this.setState({ isAutoPlaying: false });
+          break;
+        };
+        await pause(500);
+      }
+    });
   }
 
   pushCallStackFrame = (name: string) => {
@@ -194,6 +221,10 @@ class App extends Component {
     this.setState({ tasks: newTasks });
   }
 
+  handleClickPauseAutoStep = () => {
+    this.setState({ isAutoPlaying: false });
+  }
+
   handleClickAutoStep = () => {
     // TODO: Add isAutoPlaying to state to disable other buttons...
     this.autoPlayEvents();
@@ -204,7 +235,7 @@ class App extends Component {
   }
 
   render() {
-    const { frames, tasks, microtasks, mode, code } = this.state;
+    const { frames, tasks, microtasks, mode, code, isAutoPlaying } = this.state;
 
     return (
       <AppRoot
@@ -213,9 +244,12 @@ class App extends Component {
         tasks={tasks}
         microtasks={microtasks}
         frames={frames}
+        isAutoPlaying={isAutoPlaying}
+        hasReachedEnd={this.hasReachedEnd()}
         onChangeCode={this.handleChangeCode}
         onClickRun={this.handleClickRun}
         onClickEdit={this.handleClickEdit}
+        onClickPauseAutoStep={this.handleClickPauseAutoStep}
         onClickAutoStep={this.handleClickAutoStep}
         onClickStepBack={() => {}}
         onClickStep={this.handleClickStep}

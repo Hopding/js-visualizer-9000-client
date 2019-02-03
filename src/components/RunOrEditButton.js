@@ -30,7 +30,7 @@ const BlueButton = (props) => (
   </MuiThemeProvider>
 );
 
-const themedStyles = theme => ({
+const styles = theme => ({
   button: {
     margin: theme.spacing.unit,
     color: 'white',
@@ -94,4 +94,4 @@ const RunOrEditButton = ({
   </div>
 );
 
-export default withStyles(themedStyles)(RunOrEditButton);
+export default withStyles(styles)(RunOrEditButton);

@@ -63,9 +63,12 @@ const AppRoot = ({
   tasks,
   microtasks,
   frames,
+  isAutoPlaying,
+  hasReachedEnd,
   onChangeCode,
   onClickRun,
   onClickEdit,
+  onClickPauseAutoStep,
   onClickAutoStep,
   onClickStepBack,
   onClickStep,
@@ -75,9 +78,12 @@ const AppRoot = ({
   tasks: { id: string, name: string }[],
   microtasks: { name: string }[],
   frames: { name: string }[],
+  isAutoPlaying: boolean,
+  hasReachedEnd: boolean,
   onChangeCode: string => any,
   onClickRun: void => any,
   onClickEdit: void => any,
+  onClickPauseAutoStep: void => any,
   onClickAutoStep: void => any,
   onClickStepBack: void => any,
   onClickStep: void => any,
@@ -109,6 +115,8 @@ const AppRoot = ({
         </div>
         <div style={styles.bottomRightContainer}>
           <CallStack frames={frames} />
+
+          {/*// TODO: Disable this while "running"*/}
           <ExecutionModelStepper />
           <StatsTable />
         </div>
@@ -116,6 +124,9 @@ const AppRoot = ({
 
       <FabControls
         visible={mode === 'visualizing'}
+        isAutoPlaying={isAutoPlaying}
+        hasReachedEnd={hasReachedEnd}
+        onClickPauseAutoStep={onClickPauseAutoStep}
         onClickAutoStep={onClickAutoStep}
         onClickStepBack={onClickStepBack}
         onClickStep={onClickStep}
