@@ -59,9 +59,11 @@ const styles = {
 const AppRoot = ({
   classes,
   mode,
+  code,
   tasks,
   microtasks,
   frames,
+  onChangeCode,
   onClickRun,
   onClickEdit,
   onClickAutoStep,
@@ -69,9 +71,11 @@ const AppRoot = ({
   onClickStep,
 }: {|
   mode: 'editing' | 'visualizing',
+  code: string,
   tasks: { id: string, name: string }[],
   microtasks: { name: string }[],
   frames: { name: string }[],
+  onChangeCode: string => any,
   onClickRun: void => any,
   onClickEdit: void => any,
   onClickAutoStep: void => any,
@@ -91,7 +95,11 @@ const AppRoot = ({
             onClickEdit={onClickEdit}
           />
         </div>
-        <CodeEditor locked={mode !== 'editing'} />
+        <CodeEditor
+          code={code}
+          locked={mode !== 'editing'}
+          onChangeCode={onChangeCode}
+        />
       </div>
 
       <div style={styles.rightContainer}>

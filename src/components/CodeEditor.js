@@ -73,12 +73,7 @@ const CodeEditor = ({
         marginRight: -15,
         pointerEvents: locked ? 'none' : 'auto',
       }}
-      value={`
-function foobar() {
-  console.log('testing!');
-}
-`.trim()
-}
+      value={code}
       mode="javascript"
       theme="solarized_light"
       onChange={onChangeCode}

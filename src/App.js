@@ -31,9 +31,13 @@ class App extends Component {
       // { id: uuid(), name: 'setTimeout(...)' },
     ],
     mode: 'editing', // 'editing' | 'visualizing'
+    code: '',
   };
 
   componentDidMount() {
+    const code = localStorage.getItem('code') || '';
+    this.setState({ code });
+
     // setInterval(() => {
     //   const { frames, tasks } = this.state;
     //   this.setState({
@@ -53,6 +57,11 @@ class App extends Component {
     // }, 7000)
   }
 
+  handleChangeCode = (code: string) => {
+    this.setState({ code });
+    localStorage.setItem('code', code);
+  }
+
   handleEdit = () => {
     this.setState({ mode: 'editing' });
   }
@@ -62,14 +71,16 @@ class App extends Component {
   }
 
   render() {
-    const { frames, tasks, mode } = this.state;
+    const { frames, tasks, mode, code } = this.state;
 
     return (
       <AppRoot
         mode={mode}
+        code={code}
         tasks={tasks}
         microtasks={tasks}
         frames={frames}
+        onChangeCode={this.handleChangeCode}
         onClickRun={this.handleRun}
         onClickEdit={this.handleEdit}
         onClickAutoStep={() => {}}
