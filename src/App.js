@@ -22,6 +22,7 @@ class App extends Component {
     code: '',
     isAutoPlaying: false,
     currentStep: 'runTask', // 'runTask' | 'runMicrotasks' | 'rerender',
+    example: 'none',
   };
 
   currEventIdx: number = 0;
@@ -30,6 +31,21 @@ class App extends Component {
   componentDidMount() {
     const code = localStorage.getItem('code') || '';
     this.setState({ code });
+  }
+
+  handleChangeExample = (evt: { target: { value: string } }) => {
+    const { value } = evt.target;
+    this.setState({
+      code: value === 'none' ? '' : value,
+      example: evt.target.value,
+      mode: 'editing',
+      frames: [],
+      tasks: [],
+      microtasks: [],
+      markers: [],
+      isAutoPlaying: false,
+      currentStep: 'runTask',
+    });
   }
 
   handleChangeCode = (code: string) => {
@@ -211,11 +227,12 @@ class App extends Component {
   }
 
   render() {
-    const { tasks, microtasks, frames, markers, mode, code, isAutoPlaying, currentStep } = this.state;
+    const { tasks, microtasks, frames, markers, mode, example, code, isAutoPlaying, currentStep } = this.state;
 
     return (
       <AppRoot
         mode={mode}
+        example={example}
         code={code}
         tasks={tasks}
         microtasks={microtasks}
@@ -224,6 +241,7 @@ class App extends Component {
         isAutoPlaying={isAutoPlaying}
         hasReachedEnd={this.hasReachedEnd()}
         currentStep={currentStep}
+        onChangeExample={this.handleChangeExample}
         onChangeCode={this.handleChangeCode}
         onClickRun={this.handleClickRun}
         onClickEdit={this.handleClickEdit}

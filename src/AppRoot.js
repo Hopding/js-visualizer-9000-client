@@ -59,6 +59,7 @@ const styles = {
 const AppRoot = ({
   classes,
   mode,
+  example,
   code,
   tasks,
   microtasks,
@@ -67,6 +68,7 @@ const AppRoot = ({
   isAutoPlaying,
   hasReachedEnd,
   currentStep,
+  onChangeExample,
   onChangeCode,
   onClickRun,
   onClickEdit,
@@ -76,6 +78,7 @@ const AppRoot = ({
   onClickStep,
 }: {|
   mode: 'editing' | 'running' | 'visualizing',
+  example: string,
   code: string,
   tasks: { id: string, name: string }[],
   microtasks: { name: string }[],
@@ -84,6 +87,7 @@ const AppRoot = ({
   isAutoPlaying: boolean,
   hasReachedEnd: boolean,
   currentStep: 'runTasks' | 'runMicrotasks' | 'rerender',
+  onChangeExample: ({ target: { value: string } }) => any,
   onChangeCode: string => any,
   onClickRun: void => any,
   onClickEdit: void => any,
@@ -99,7 +103,11 @@ const AppRoot = ({
         <Header />
         <div style={styles.codeControlsContainer}>
           {/*// TODO: Disable this while "running"*/}
-          <ExampleSelector />
+          <ExampleSelector
+            example={example}
+            locked={mode === 'running'}
+            onChangeExample={onChangeExample}
+          />
           <RunOrEditButton
             mode={mode}
             onClickRun={onClickRun}

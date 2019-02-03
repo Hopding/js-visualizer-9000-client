@@ -8,7 +8,9 @@ import Select from '@material-ui/core/Select';
 
 import { withStyles } from '@material-ui/core/styles';
 
-const themedStyles = theme => ({
+import EXAMPLES from '../assets/examples';
+
+const styles = theme => ({
   form: {
     display: 'flex',
     flexWrap: 'wrap',
@@ -27,29 +29,31 @@ const themedStyles = theme => ({
 
 const ExampleSelector = ({
   classes,
+  example,
+  locked,
+  onChangeExample,
 }: {|
   classes: any,
+  example: string,
+  locked: boolean,
+  onChangeExample: ({ target: { value: string } }) => any,
 |}) => (
   <form className={classes.form} autoComplete="off">
     <FormControl className={classes.formControl}>
-      <InputLabel htmlFor="example">Example</InputLabel>
       <Select
-        value="example"
-        onChange={() => {}}
-        inputProps={{
-          name: 'example-name',
-          id: 'example-id',
-        }}
+        value={example}
+        onChange={onChangeExample}
+        disabled={locked}
       >
-        <MenuItem value="">
-          <em>None</em>
+        <MenuItem value="none">
+          <em>Choose an Example</em>
         </MenuItem>
-        <MenuItem value="exampleOne">Example One</MenuItem>
-        <MenuItem value="exampleTwo">Example Two</MenuItem>
-        <MenuItem value="exampleThree">Example Three</MenuItem>
+        {EXAMPLES.map(({ name, value }) => (
+          <MenuItem value={value}>{name}</MenuItem>
+        ))}
       </Select>
     </FormControl>
   </form>
 );
 
-export default withStyles(themedStyles)(ExampleSelector);
+export default withStyles(styles)(ExampleSelector);
