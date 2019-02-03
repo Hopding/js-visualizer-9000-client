@@ -66,6 +66,7 @@ const AppRoot = ({
   markers,
   isAutoPlaying,
   hasReachedEnd,
+  currentStep,
   onChangeCode,
   onClickRun,
   onClickEdit,
@@ -82,6 +83,7 @@ const AppRoot = ({
   markers: { start: number, end: number }[],
   isAutoPlaying: boolean,
   hasReachedEnd: boolean,
+  currentStep: 'runTasks' | 'runMicrotasks' | 'rerender',
   onChangeCode: string => any,
   onClickRun: void => any,
   onClickEdit: void => any,
@@ -96,6 +98,7 @@ const AppRoot = ({
       <div style={styles.leftContainer}>
         <Header />
         <div style={styles.codeControlsContainer}>
+          {/*// TODO: Disable this while "running"*/}
           <ExampleSelector />
           <RunOrEditButton
             mode={mode}
@@ -118,9 +121,7 @@ const AppRoot = ({
         </div>
         <div style={styles.bottomRightContainer}>
           <CallStack frames={frames} />
-
-          {/*// TODO: Disable this while "running"*/}
-          <ExecutionModelStepper />
+          <ExecutionModelStepper step={currentStep} />
           <StatsTable />
         </div>
       </div>

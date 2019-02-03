@@ -9,7 +9,8 @@ const isNotIgnoredEvent = ({ type }) => [
   'EnterFunction', 'ExitFunction',
   'EnqueueMicrotask', 'DequeueMicrotask',
   'InitTimeout', 'BeforeTimeout',
-].includes(type)
+  'Rerender',
+].includes(type);
 
 class App extends Component {
   state = {
@@ -20,6 +21,7 @@ class App extends Component {
     mode: 'editing', // 'editing' | 'running' | 'visualizing'
     code: '',
     isAutoPlaying: false,
+    currentStep: 'runTask', // 'runTask' | 'runMicrotasks' | 'rerender',
   };
 
   currEventIdx: number = 0;
@@ -43,6 +45,7 @@ class App extends Component {
       microtasks: [],
       markers: [],
       isAutoPlaying: false,
+      currentStep: 'runTask',
     });
   }
 
@@ -56,6 +59,7 @@ class App extends Component {
       microtasks: [],
       markers: [],
       isAutoPlaying: false,
+      currentStep: 'runTask',
     });
 
     try {
@@ -79,9 +83,13 @@ class App extends Component {
     }
   }
 
-  indexOfNextEvent = () => this.events
-    .slice(this.currEventIdx)
-    .findIndex(isNotIgnoredEvent);
+  indexOfNextEvent = () => {
+    const idx = this.events
+      .slice(this.currEventIdx)
+      .findIndex(isNotIgnoredEvent);
+    if (idx === -1) return -1;
+    return this.currEventIdx + idx;
+  }
 
   hasReachedEnd = () => this.indexOfNextEvent() === -1;
 
@@ -89,9 +97,8 @@ class App extends Component {
     const { markers } = this.state;
 
     const idx = this.indexOfNextEvent();
-    console.log('index:', idx)
     if (idx === -1) return true;
-    this.currEventIdx = this.currEventIdx + idx;
+    this.currEventIdx = idx;
 
     const {
       type,
@@ -122,6 +129,16 @@ class App extends Component {
     }
 
     this.currEventIdx += 1;
+
+    const nextEvent = this.events[this.indexOfNextEvent()];
+    if (!nextEvent || nextEvent.type === 'Rerender') {
+      this.setState({ currentStep: 'rerender' });
+    } else if (nextEvent.type === 'BeforeTimeout') {
+      this.setState({ currentStep: 'runTask' });
+    } else if (nextEvent.type === 'DequeueMicrotask') {
+      this.setState({ currentStep: 'runMicrotasks' });
+    }
+
     return false;
   }
 
@@ -194,7 +211,7 @@ class App extends Component {
   }
 
   render() {
-    const { tasks, microtasks, frames, markers, mode, code, isAutoPlaying } = this.state;
+    const { tasks, microtasks, frames, markers, mode, code, isAutoPlaying, currentStep } = this.state;
 
     return (
       <AppRoot
@@ -206,6 +223,7 @@ class App extends Component {
         markers={markers}
         isAutoPlaying={isAutoPlaying}
         hasReachedEnd={this.hasReachedEnd()}
+        currentStep={currentStep}
         onChangeCode={this.handleChangeCode}
         onClickRun={this.handleClickRun}
         onClickEdit={this.handleClickEdit}
