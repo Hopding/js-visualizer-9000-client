@@ -5,7 +5,7 @@ import MuiThemeProvider from '@material-ui/core/styles/MuiThemeProvider';
 
 import { createMuiTheme } from '@material-ui/core/styles';
 import yellow from '@material-ui/core/colors/yellow';
-import orange from '@material-ui/core/colors/orange';
+import blue from '@material-ui/core/colors/blue';
 import blueGrey from '@material-ui/core/colors/blueGrey';
 
 import Header from './components/Header';
@@ -22,7 +22,7 @@ import FabControls from './components/FabControls';
 const theme = createMuiTheme({
   palette: {
     primary: yellow,
-    secondary: orange,
+    secondary: blue,
   },
 });
 
@@ -63,6 +63,7 @@ const AppRoot = ({
   tasks,
   microtasks,
   frames,
+  markers,
   isAutoPlaying,
   hasReachedEnd,
   onChangeCode,
@@ -78,6 +79,7 @@ const AppRoot = ({
   tasks: { id: string, name: string }[],
   microtasks: { name: string }[],
   frames: { name: string }[],
+  markers: { start: number, end: number }[],
   isAutoPlaying: boolean,
   hasReachedEnd: boolean,
   onChangeCode: string => any,
@@ -103,6 +105,7 @@ const AppRoot = ({
         </div>
         <CodeEditor
           code={code}
+          markers={markers}
           locked={mode !== 'editing'}
           onChangeCode={onChangeCode}
         />

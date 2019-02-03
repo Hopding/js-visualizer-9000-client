@@ -10,6 +10,7 @@ import 'brace/mode/javascript';
 import 'brace/theme/solarized_light';
 
 import '../styles/colors.css';
+import { getPastelIndexFor } from '../styles/colors';
 
 const styles = theme => ({
   root: {
@@ -67,7 +68,7 @@ const CodeEditor = ({
   <Paper className={classes.root} elevation={1}>
     <AceEditor
       style={{
-        width: 415,
+        width: 450,
         height: '100%',
         marginLeft: -15,
         marginRight: -15,
@@ -86,7 +87,7 @@ const CodeEditor = ({
           startCol: convertCodeIndexToRowCol(code, start).col,
           endRow: convertCodeIndexToRowCol(code, end).row,
           endCol: convertCodeIndexToRowCol(code, end).col,
-          className: `active-function-marker${idx}`,
+          className: `active-function-marker${getPastelIndexFor(idx)}`,
           type: 'text',
         }))
       }

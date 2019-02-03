@@ -10,7 +10,7 @@ import CardHeader from '@material-ui/core/CardHeader';
 import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
 
-import { pastels } from '../styles/colors';
+import { getPastelForIndex } from '../styles/colors';
 
 const styles = theme => ({
   card: {
@@ -43,9 +43,9 @@ const styles = theme => ({
   }
 });
 
-const Frame = React.forwardRef(({ classes, name }, ref) => (
+const Frame = React.forwardRef(({ classes, name, style }, ref) => (
   <RootRef rootRef={ref}>
-    <Paper ref={ref} className={classes.frame} elevation={1}>
+    <Paper ref={ref} style={style} className={classes.frame} elevation={1}>
       <Typography variant="h6" color="inherit">
         {name}
       </Typography>
@@ -111,7 +111,7 @@ class CallStack extends React.Component<Props> {
                     key={id}
                     classes={classes}
                     name={name}
-                    style={{ backgroundColor: pastels[idx] }}
+                    style={{ backgroundColor: getPastelForIndex(idx) }}
                   >
                     {name}
                   </FrameDiv>

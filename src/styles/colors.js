@@ -1,3 +1,4 @@
+/* @flow */
 export const pastels = [
   '#AFF8D8',
   '#FFCBC1',
@@ -9,3 +10,9 @@ export const pastels = [
   '#FFABAB',
   '#FFB5E8',
 ];
+
+export const getPastelIndexFor = (idx: number) =>
+  idx % pastels.length;
+
+export const getPastelForIndex = (idx: number) =>
+  pastels[getPastelIndexFor(idx)];

@@ -13,31 +13,8 @@ const isNotIgnoredEvent = ({ type }) => [
 
 class App extends Component {
   state = {
-    frames: [
-      // { id: uuid(), name: 'first(1)' },
-      // { id: uuid(), name: 'first(2)' },
-      // { id: uuid(), name: 'first(3)' },
-      // { id: uuid(), name: 'first(4)' },
-      // { id: uuid(), name: 'first(5)' },
-      // { id: uuid(), name: 'first(6)' },
-      // { id: uuid(), name: 'first(7)' },
-      // { id: uuid(), name: 'first(8)' },
-      // { id: uuid(), name: 'first(9)' },
-      // { id: uuid(), name: 'first(10)' },
-      // { id: uuid(), name: 'first(1)' },
-    ],
-    tasks: [
-      // { id: uuid(), name: 'setTimeout(...)' },
-      // { id: uuid(), name: 'setTimeout(...)' },
-      // { id: uuid(), name: 'setTimeout(...)' },
-      // { id: uuid(), name: 'setTimeout(...)' },
-      // { id: uuid(), name: 'setTimeout(...)' },
-      // { id: uuid(), name: 'setTimeout(...)' },
-      // { id: uuid(), name: 'setTimeout(...)' },
-      // { id: uuid(), name: 'setTimeout(...)' },
-      // { id: uuid(), name: 'setTimeout(...)' },
-      // { id: uuid(), name: 'setTimeout(...)' },
-    ],
+    frames: [],
+    tasks: [],
     microtasks: [],
     markers: [],
     mode: 'editing', // 'editing' | 'running' | 'visualizing'
@@ -51,24 +28,6 @@ class App extends Component {
   componentDidMount() {
     const code = localStorage.getItem('code') || '';
     this.setState({ code });
-
-    // setInterval(() => {
-    //   const { frames, tasks } = this.state;
-    //   this.setState({
-    //     frames: frames.concat({ id: uuid(), name: 'myFunction()' }),
-    //     tasks: tasks.concat({ id: uuid(), name: 'setTimeout(...)' }),
-    //   });
-    // }, 1000);
-    //
-    // setTimeout(() => {
-    //   setInterval(() => {
-    //     const { frames, tasks } = this.state;
-    //     this.setState({
-    //       frames: frames.slice(0, frames.length - 1),
-    //       tasks: tasks.slice(1, tasks.length),
-    //     });
-    //   }, 1000);
-    // }, 7000)
   }
 
   handleChangeCode = (code: string) => {
@@ -130,6 +89,7 @@ class App extends Component {
     const { markers } = this.state;
 
     const idx = this.indexOfNextEvent();
+    console.log('index:', idx)
     if (idx === -1) return true;
     this.currEventIdx = this.currEventIdx + idx;
 
@@ -168,7 +128,6 @@ class App extends Component {
   autoPlayEvents = () => {
     this.setState({ isAutoPlaying: true }, async () => {
       while (
-        this.currEventIdx < this.events.length &&
         this.state.mode === 'visualizing' &&
         this.state.isAutoPlaying
       ) {
@@ -235,7 +194,7 @@ class App extends Component {
   }
 
   render() {
-    const { frames, tasks, microtasks, mode, code, isAutoPlaying } = this.state;
+    const { tasks, microtasks, frames, markers, mode, code, isAutoPlaying } = this.state;
 
     return (
       <AppRoot
@@ -244,6 +203,7 @@ class App extends Component {
         tasks={tasks}
         microtasks={microtasks}
         frames={frames}
+        markers={markers}
         isAutoPlaying={isAutoPlaying}
         hasReachedEnd={this.hasReachedEnd()}
         onChangeCode={this.handleChangeCode}
