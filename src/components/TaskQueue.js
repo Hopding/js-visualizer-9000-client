@@ -10,7 +10,7 @@ import CardHeader from '@material-ui/core/CardHeader';
 import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
 
-import { pastels } from './colors';
+import { pastels } from '../styles/colors';
 
 const styles = theme => ({
   card: {
@@ -24,7 +24,7 @@ const styles = theme => ({
   },
   content: {
   },
-  microtask: {
+  task: {
     paddingTop: theme.spacing.unit * 1,
     paddingBottom: theme.spacing.unit * 1,
     paddingLeft: theme.spacing.unit * 1,
@@ -34,17 +34,17 @@ const styles = theme => ({
   },
 });
 
-const Microtask = React.forwardRef(({ classes, name }, ref) => (
+const Task = React.forwardRef(({ classes, name }, ref) => (
   <RootRef rootRef={ref}>
-    <Paper className={classes.microtask} elevation={1}>
-      <Typography variant="h6" color="inherit">
+    <Paper ref={ref} className={classes.task} elevation={1}>
+      <Typography style={{ fontSize: 20 }} color="inherit">
         {name}
       </Typography>
     </Paper>
   </RootRef>
 ));
 
-const MicrotaskDiv = posed(Microtask)({
+const TaskDiv = posed(Task)({
   preEnter: {
     x: 200,
     opacity: 1,
@@ -74,10 +74,10 @@ const MicrotaskDiv = posed(Microtask)({
 
 type Props = {
   classes: any,
-  microtasks: { id: string, name: string }[],
+  tasks: { id: string, name: string }[],
 };
 
-class MicrotaskQueue extends React.Component<Props> {
+class TaskQueue extends React.Component<Props> {
   state = { contentWidth: undefined, }
 
   contentRef = React.createRef();
@@ -89,13 +89,13 @@ class MicrotaskQueue extends React.Component<Props> {
   }
 
   render() {
-    const { classes, microtasks } = this.props;
+    const { classes, tasks } = this.props;
     const { contentWidth } = this.state;
 
     return (
       <Card className={classes.card}>
         <CardContent className={classes.content}>
-          <CardHeader title="Microtask Queue" className={classes.header} />
+          <CardHeader title="Task Queue" className={classes.header} />
           <div
             ref={this.contentRef}
             style={{
@@ -109,15 +109,15 @@ class MicrotaskQueue extends React.Component<Props> {
           >
             {contentWidth !== undefined && (
               <PoseGroup preEnterPose="preEnter">
-                {microtasks.map(({ id, name }, idx) => (
-                  <MicrotaskDiv
+                {tasks.map(({ id, name }, idx) => (
+                  <TaskDiv
                     key={id}
                     classes={classes}
                     name={name}
                     style={{ backgroundColor: pastels[idx] }}
                   >
                     {name}
-                  </MicrotaskDiv>
+                  </TaskDiv>
                 ))}
               </PoseGroup>
             )}
@@ -128,4 +128,4 @@ class MicrotaskQueue extends React.Component<Props> {
   }
 }
 
-export default withStyles(styles)(MicrotaskQueue);
+export default withStyles(styles)(TaskQueue);

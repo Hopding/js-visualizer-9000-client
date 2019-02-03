@@ -10,42 +10,33 @@ import CardHeader from '@material-ui/core/CardHeader';
 import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
 
-import { pastels } from './colors';
+import { pastels } from '../styles/colors';
 
-const stylesX = theme => ({
+const styles = theme => ({
   card: {
+    maxHeight: 140,
     margin: theme.spacing.unit,
-    maxWidth: 225,
-    flex: 1,
-    display: 'flex',
-    flexDirection: 'column',
+    height: 120,
     backgroundColor: theme.palette.primary.main,
   },
   header: {
     padding: 0,
   },
   content: {
-    width: 200,
-    flex: 1,
-    display: 'flex',
-    flexDirection: 'column',
   },
-  frame: {
-    width: 160,
-    height: 30,
+  microtask: {
     paddingTop: theme.spacing.unit * 1,
     paddingBottom: theme.spacing.unit * 1,
     paddingLeft: theme.spacing.unit * 1,
     paddingRight: theme.spacing.unit * 1,
     margin: theme.spacing.unit,
-    marginRight: theme.spacing.unit * 1.5,
-    textAlign: 'center',
-  }
+    display: 'inline-block',
+  },
 });
 
-const Frame = React.forwardRef(({ classes, name }, ref) => (
+const Microtask = React.forwardRef(({ classes, name }, ref) => (
   <RootRef rootRef={ref}>
-    <Paper ref={ref} className={classes.frame} elevation={1}>
+    <Paper className={classes.microtask} elevation={1}>
       <Typography variant="h6" color="inherit">
         {name}
       </Typography>
@@ -53,68 +44,80 @@ const Frame = React.forwardRef(({ classes, name }, ref) => (
   </RootRef>
 ));
 
-const FrameDiv = posed(Frame)({
+const MicrotaskDiv = posed(Microtask)({
+  preEnter: {
+    x: 200,
+    opacity: 1,
+    height: 25,
+    width: 140,
+    transition: {
+      x: { type: 'tween' },
+    }
+  },
   enter: {
-    y: 0,
+    x: 0,
     opacity: 1,
     transition: {
-      y: { type: 'tween' },
+      x: { type: 'tween' },
     }
   },
   exit: {
-    y: 200,
+    x: -200,
     opacity: 0,
-    height: 30,
-    width: 160,
+    height: 25,
+    width: 140,
     transition: {
-      y: { type: 'tween' },
+      x: { type: 'tween' },
     }
   }
 });
 
 type Props = {
   classes: any,
-  frames: { id: string, name: string }[],
+  microtasks: { id: string, name: string }[],
 };
 
-class CallStack extends React.Component<Props> {
-  state = { contentHeight: undefined, }
+class MicrotaskQueue extends React.Component<Props> {
+  state = { contentWidth: undefined, }
 
   contentRef = React.createRef();
 
   componentDidMount() {
     // TODO: Make this dynamic. This doesn't relayout if the screen size changes
-    const contentHeight = this.contentRef.current.clientHeight;
-    this.setState({ contentHeight });
+    const contentWidth = this.contentRef.current.clientWidth;
+    this.setState({ contentWidth });
   }
 
   render() {
-    const { classes, frames } = this.props;
-    const { contentHeight } = this.state;
+    const { classes, microtasks } = this.props;
+    const { contentWidth } = this.state;
 
     return (
       <Card className={classes.card}>
         <CardContent className={classes.content}>
-          <CardHeader title="Call Stack" className={classes.header} />
+          <CardHeader title="Microtask Queue" className={classes.header} />
           <div
             ref={this.contentRef}
             style={{
-              height: contentHeight === undefined ? '100%' : contentHeight,
+              display: 'flex',
+              flexDirection: 'row',
+              width: contentWidth === undefined ? '100%' : contentWidth,
               overflow: 'scroll',
-              paddingRight: 6,
+              maxHeight: 70,
+              paddingBottom: 5.5,
             }}
           >
-            {contentHeight !== undefined && (
-              <PoseGroup>
-                {frames.map(({ id, name }, idx) => (
-                  <FrameDiv
+            {contentWidth !== undefined && (
+              <PoseGroup preEnterPose="preEnter">
+                {microtasks.map(({ id, name }, idx) => (
+                  <MicrotaskDiv
                     key={id}
                     classes={classes}
                     name={name}
                     style={{ backgroundColor: pastels[idx] }}
                   >
                     {name}
-                  </FrameDiv>
+                  </MicrotaskDiv>
                 ))}
               </PoseGroup>
             )}
@@ -125,4 +128,4 @@ class CallStack extends React.Component<Props> {
   }
 }
 
-export default withStyles(stylesX)(CallStack);
+export default withStyles(styles)(MicrotaskQueue);

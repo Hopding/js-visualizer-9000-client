@@ -9,7 +9,7 @@ import 'brace';
 import 'brace/mode/javascript';
 import 'brace/theme/solarized_light';
 
-import './index.css';
+import '../styles/colors.css';
 
 const styles = theme => ({
   root: {

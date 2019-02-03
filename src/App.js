@@ -12,7 +12,7 @@ import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import Fab from '@material-ui/core/Fab';
 import Tooltip from '@material-ui/core/Tooltip';
-import Slide from '@material-ui/core/Slide';
+import Zoom from '@material-ui/core/Zoom';
 
 import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
@@ -41,10 +41,11 @@ import blue from '@material-ui/core/colors/blue';
 import blueGrey from '@material-ui/core/colors/blueGrey';
 
 import JavaScriptLogo from './js-logo.png';
-import CodeEditor from './CodeEditor';
-import CallStack from './CallStack';
-import TaskQueue from './TaskQueue';
-import MicrotaskQueue from './MicrotaskQueue';
+
+import CodeEditor from './components/CodeEditor';
+import CallStack from './components/CallStack';
+import TaskQueue from './components/TaskQueue';
+import MicrotaskQueue from './components/MicrotaskQueue';
 
 const theme = createMuiTheme({
   palette: {
@@ -307,37 +308,35 @@ class App extends Component {
             flexDirection: 'column',
             alignItems: 'flex-end',
             position: 'absolute',
-            bottom: 15,
-            right: 15,
+            bottom: 20,
+            right: 20,
             overflow: 'hidden',
           }}>
-            <Slide style={{ transitionDelay: '200ms' }} direction="left" in={mode === 'visualizing'}>
-              <Tooltip title="Auto Step" aria-label="Auto Step" placement="left">
+            <Tooltip style={{ transitionDelay: '100ms' }} title="Auto Step" aria-label="Auto Step" placement="left">
+              <Zoom in={mode === 'visualizing'} className={classes.fab}>
                 <Fab
                   style={{ backgroundColor: blue['500'], color: '#ffffff' }}
                   color="primary"
                   size="medium"
                   aria-label="Add"
-                  className={classes.fab}
                 >
                   <FastForwardIcon />
                 </Fab>
-              </Tooltip>
-            </Slide>
-            <Slide style={{ transitionDelay: '100ms' }} direction="left" in={mode === 'visualizing'}>
-              <Tooltip title="Step Back" aria-label="Step Back" placement="left">
+              </Zoom>
+            </Tooltip>
+            <Tooltip style={{ transitionDelay: '50ms' }} title="Step Back" aria-label="Step Back" placement="left">
+              <Zoom in={mode === 'visualizing'} className={classes.fab}>
                 <Fab
                   style={{ backgroundColor: pink['500'], color: '#ffffff' }}
                   color="secondary"
                   size="medium"
                   aria-label="Edit"
-                  className={classes.fab}
                 >
                   <ReplayIcon />
                 </Fab>
-              </Tooltip>
-            </Slide>
-            <Slide style={{ transitionDelay: '0ms' }} direction="left" in={mode === 'visualizing'}>
+              </Zoom>
+            </Tooltip>
+            <Zoom style={{ transitionDelay: '0ms' }} in={mode === 'visualizing'}>
               <Fab
                 style={{ backgroundColor: green['500'], color: '#ffffff' }}
                 variant="extended"
@@ -348,7 +347,7 @@ class App extends Component {
                 <PlayArrowIcon className={classes.extendedIcon} />
                 Step
               </Fab>
-            </Slide>
+            </Zoom>
           </div>
 
         </div>
