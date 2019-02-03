@@ -16,6 +16,7 @@ import { withStyles } from '@material-ui/core/styles';
 import green from '@material-ui/core/colors/green';
 import pink from '@material-ui/core/colors/pink';
 import blue from '@material-ui/core/colors/blue';
+import yellow from '@material-ui/core/colors/yellow';
 
 const greenTheme = createMuiTheme({ palette: { primary: green } });
 
@@ -41,6 +42,15 @@ const BlueFab = (props) => (
   </MuiThemeProvider>
 );
 
+const yellowTheme = createMuiTheme({ palette: { primary: yellow } });
+
+const YellowFab = (props) => (
+  <MuiThemeProvider theme={yellowTheme}>
+    <Fab {...props} />
+  </MuiThemeProvider>
+);
+
+
 const styles = {
   container: {
     display: 'flex',
@@ -57,6 +67,10 @@ const themedStyles = theme => ({
   fab: {
     margin: theme.spacing.unit,
     color: 'white',
+  },
+  yellowFab: {
+    margin: theme.spacing.unit,
+    color: 'black',
   },
   extendedIcon: {
     marginRight: theme.spacing.unit,
@@ -110,8 +124,8 @@ const FabControls = ({
         aria-label="Pause Auto Step"
         placement="left"
       >
-        <Zoom in={visible && isAutoPlaying} className={classes.fab}>
-          <PinkFab
+        <Zoom in={visible && isAutoPlaying} className={classes.yellowFab}>
+          <YellowFab
             color="primary"
             size="medium"
             aria-label="pause"
@@ -119,7 +133,7 @@ const FabControls = ({
             onClick={onClickPauseAutoStep}
           >
             <PauseIcon />
-          </PinkFab>
+          </YellowFab>
         </Zoom>
       </Tooltip>
     )}
