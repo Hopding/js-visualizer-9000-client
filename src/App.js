@@ -62,12 +62,35 @@ class App extends Component {
     localStorage.setItem('code', code);
   }
 
-  handleEdit = () => {
+  handleClickEdit = () => {
     this.setState({ mode: 'editing' });
   }
 
-  handleRun = () => {
-    this.setState({ mode: 'visualizing' });
+  handleClickRun = () => {
+    const { code } = this.state;
+
+    this.setState({
+      mode: 'visualizing',
+      frames: [],
+      tasks: [],
+      microtasks: [],
+    });
+
+    try {
+      const ws = new WebSocket('ws://localhost:8080');
+
+      ws.addEventListener('open', (event) => {
+        const command = { type: 'RunCode', payload: code };
+        ws.send(JSON.stringify(command))
+      });
+
+      ws.addEventListener('message', (event) => {
+        const events = JSON.parse(event.data);
+        console.log('RunCode Events:', events);
+      });
+    } catch (e) {
+      this.setState({ mode: 'editing' });
+    }
   }
 
   render() {
@@ -81,8 +104,8 @@ class App extends Component {
         microtasks={tasks}
         frames={frames}
         onChangeCode={this.handleChangeCode}
-        onClickRun={this.handleRun}
-        onClickEdit={this.handleEdit}
+        onClickRun={this.handleClickRun}
+        onClickEdit={this.handleClickEdit}
         onClickAutoStep={() => {}}
         onClickStepBack={() => {}}
         onClickStep={() => {}}
