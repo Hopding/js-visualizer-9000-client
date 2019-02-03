@@ -2,34 +2,53 @@
 import React from 'react';
 
 import Button from '@material-ui/core/Button';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 import SendIcon from '@material-ui/icons/Send';
 import CodeIcon from '@material-ui/icons/Code';
 
+import MuiThemeProvider from '@material-ui/core/styles/MuiThemeProvider';
+import { createMuiTheme } from '@material-ui/core/styles';
 import { withStyles } from '@material-ui/core/styles';
 import green from '@material-ui/core/colors/green';
 import blue from '@material-ui/core/colors/blue';
+import yellow from '@material-ui/core/colors/yellow';
 
-const styles = {
-  runButton: {
-    backgroundColor: green['500'],
-    color: '#ffffff',
-  },
-  editButton: {
-    backgroundColor: blue['300'],
-    color: '#ffffff',
-  },
-}
+const greenTheme = createMuiTheme({ palette: { primary: green } });
+
+const GreenButton = (props) => (
+  <MuiThemeProvider theme={greenTheme}>
+    <Button {...props} />
+  </MuiThemeProvider>
+);
+
+const blueTheme = createMuiTheme({ palette: { primary: blue } });
+
+const BlueButton = (props) => (
+  <MuiThemeProvider theme={blueTheme}>
+    <Button {...props} />
+  </MuiThemeProvider>
+);
 
 const themedStyles = theme => ({
-  runButton: {
+  button: {
     margin: theme.spacing.unit,
-  },
-  editButton: {
-    margin: theme.spacing.unit,
+    color: 'white',
   },
   rightIcon: {
     marginLeft: theme.spacing.unit,
+    color: 'white',
+  },
+  wrapper: {
+    position: 'relative',
+  },
+  buttonProgress: {
+    color: yellow[500],
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    marginTop: -12,
+    marginLeft: -12,
   },
 });
 
@@ -46,26 +65,30 @@ const RunOrEditButton = ({
 |}) => (
   <div>
     {
-      mode === 'editing' ? (
-        <Button
-          style={styles.runButton}
-          variant="contained"
-          className={classes.runButton}
-          onClick={onClickRun}
-        >
-          Run
-          <SendIcon className={classes.rightIcon}>Run</SendIcon>
-        </Button>
+      mode === 'editing' || mode === 'running' ? (
+        <div className={classes.wrapper}>
+          <GreenButton
+            color="primary"
+            variant="contained"
+            className={classes.button}
+            disabled={mode === 'running'}
+            onClick={onClickRun}
+          >
+            Run
+            <SendIcon className={classes.rightIcon}>Run</SendIcon>
+          </GreenButton>
+          {mode === 'running' && <CircularProgress size={24} className={classes.buttonProgress} />}
+        </div>
       ) : mode === 'visualizing' ? (
-        <Button
-          style={styles.editButton}
+        <BlueButton
+          color="primary"
           variant="contained"
-          className={classes.editButton}
+          className={classes.button}
           onClick={onClickEdit}
         >
           Edit
           <CodeIcon className={classes.rightIcon}>Edit</CodeIcon>
-        </Button>
+        </BlueButton>
       ) : new Error(`Invalid mode: ${mode}`)
     }
   </div>

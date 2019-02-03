@@ -70,7 +70,7 @@ const AppRoot = ({
   onClickStepBack,
   onClickStep,
 }: {|
-  mode: 'editing' | 'visualizing',
+  mode: 'editing' | 'running' | 'visualizing',
   code: string,
   tasks: { id: string, name: string }[],
   microtasks: { name: string }[],
@@ -105,7 +105,7 @@ const AppRoot = ({
       <div style={styles.rightContainer}>
         <div>
           <TaskQueue tasks={tasks} />
-          <MicrotaskQueue microtasks={tasks} />
+          <MicrotaskQueue microtasks={microtasks} />
         </div>
         <div style={styles.bottomRightContainer}>
           <CallStack frames={frames} />
