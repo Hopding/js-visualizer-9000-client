@@ -26,7 +26,7 @@ const styles = theme => ({
     paddingBottom: theme.spacing.unit * 1,
     margin: theme.spacing.unit,
     backgroundColor: theme.palette.primary.main,
-    maxWidth: 225,
+    width: 225,
   },
   stepper: {
     backgroundColor: 'transparent',
@@ -34,21 +34,25 @@ const styles = theme => ({
 });
 
 const stepTitles = [
+  'Evaluate Script',
   'Run a Task',
   'Run all Microtasks',
   'Rerender',
 ];
 
 const stepDescriptions = [
+  'Synchronously execute the script as though it were a function call.',
   'Select the oldest Task from the Task Queue. Run it until the Call Stack is empty.',
   'Select the oldest Microtask from the Microtask Queue. Run it until the Call Stack is empty. Repeat until the Microtask Queue is empty.',
-  'Rerender the UI. This step only applies to browsers, not NodeJS.',
+  'Rerender the UI. Then, return to step 2. (This step only applies to browsers, not NodeJS).',
 ];
 
 const idxForStep = {
-  runTask: 0,
-  runMicrotasks: 1,
-  rerender: 2,
+  none: -1,
+  evaluateScript: 0,
+  runTask: 1,
+  runMicrotasks: 2,
+  rerender: 3,
 };
 
 const ExecutionModelStepper = ({
@@ -56,7 +60,7 @@ const ExecutionModelStepper = ({
   classes,
 }: {|
   classes: any,
-  step: 'runTask' | 'runMicrotasks' | 'rerender',
+  step: 'none' | 'evaluateScript' | 'runTask' | 'runMicrotasks' | 'rerender',
 |}) => (
   <Paper className={classes.root} elevation={1}>
     <MuiThemeProvider theme={blueTheme}>

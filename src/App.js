@@ -33,8 +33,15 @@ class App extends Component {
     mode: 'editing', // 'editing' | 'running' | 'visualizing'
     code: '',
     isAutoPlaying: false,
-    currentStep: 'runTask', // 'runTask' | 'runMicrotasks' | 'rerender',
+    currentStep: 'none', // 'none' | 'runTask' | 'runMicrotasks' | 'rerender',
     example: 'none',
+    // stats: {
+    //   promisesCreated: 0,
+    //   promisesResolved: 0,
+    //   functionCalls: 0,
+    //   tasksCreated: 0,
+    //   microtasksCreated: 0,
+    // }
   };
 
   currEventIdx: number = 0;
@@ -81,7 +88,7 @@ class App extends Component {
       microtasks: [],
       markers: [],
       isAutoPlaying: false,
-      currentStep: 'runTask',
+      currentStep: 'none',
     });
   }
 
@@ -99,7 +106,7 @@ class App extends Component {
       microtasks: [],
       markers: [],
       isAutoPlaying: false,
-      currentStep: 'runTask',
+      currentStep: 'none',
     });
   }
 
@@ -113,7 +120,7 @@ class App extends Component {
       microtasks: [],
       markers: [],
       isAutoPlaying: false,
-      currentStep: 'runTask',
+      currentStep: 'none',
     });
 
     try {
@@ -129,11 +136,11 @@ class App extends Component {
         console.log('RunCode Events:', events);
         this.currEventIdx = 0;
         this.events = events;
-        this.setState({ mode: 'visualizing' });
+        this.setState({ mode: 'visualizing', currentStep: 'evaluateScript' });
       });
     } catch (e) {
       this.currEventIdx = 0;
-      this.setState({ mode: 'editing', markers: [] });
+      this.setState({ mode: 'editing', currentStep: 'none', markers: [] });
     }
   }
 
@@ -148,7 +155,7 @@ class App extends Component {
   hasReachedEnd = () => this.indexOfNextEvent() === -1;
 
   playNextEvent = () => {
-    const { markers } = this.state;
+    const { markers, currentStep } = this.state;
 
     const idx = this.indexOfNextEvent();
     if (idx === -1) return true;
@@ -197,7 +204,7 @@ class App extends Component {
     this.currEventIdx += 1;
 
     const nextEvent = this.events[this.indexOfNextEvent()];
-    if (!nextEvent || nextEvent.type === 'Rerender') {
+    if (currentStep !== 'evaluateScript' && (!nextEvent || nextEvent.type === 'Rerender')) {
       this.setState({ currentStep: 'rerender' });
     } else if (nextEvent.type === 'BeforeTimeout') {
       this.setState({ currentStep: 'runTask' });

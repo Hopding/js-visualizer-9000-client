@@ -86,7 +86,7 @@ const AppRoot = ({
   markers: { start: number, end: number }[],
   isAutoPlaying: boolean,
   hasReachedEnd: boolean,
-  currentStep: 'runTasks' | 'runMicrotasks' | 'rerender',
+  currentStep: 'evaluateScript' | 'runTasks' | 'runMicrotasks' | 'rerender',
   onChangeExample: ({ target: { value: string } }) => any,
   onChangeCode: string => any,
   onClickRun: void => any,
@@ -129,7 +129,7 @@ const AppRoot = ({
         <div style={styles.bottomRightContainer}>
           <CallStack frames={frames} />
           <ExecutionModelStepper step={currentStep} />
-          <StatsTable />
+          {/*<StatsTable />*/}
         </div>
       </div>
 
