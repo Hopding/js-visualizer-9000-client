@@ -27,9 +27,12 @@ const PRETTY_MUCH_INFINITY = 9999999999;
 
 class App extends Component {
   state = {
-    frames: [],
-    tasks: [],
-    microtasks: [],
+    // tasks: [],
+    tasks: _.range(10).map(id => ({ id, name: 'setTimeout' })),
+    // microtasks: [],
+    microtasks: _.range(10).map(id => ({ id, name: 'resolve' })),
+    // frames: [],
+    frames: _.range(20).map(id => ({ id, name: 'foo()' })),
     markers: [],
     mode: 'editing', // 'editing' | 'running' | 'visualizing'
     code: '',
@@ -134,7 +137,7 @@ class App extends Component {
       });
 
       ws.addEventListener('message', (event) => {
-        const events = JSON.parse(event.data);
+        const events = JSON.parse(event.data || [{}]);
         console.log('RunCode Events:', events);
 
         if (events[0].type === 'UncaughtError') {
@@ -167,6 +170,7 @@ class App extends Component {
 
   hasReachedEnd = () => this.indexOfNextEvent() === -1;
 
+  // TODO: Handle uncaught errors (e.g. undefined calling undefined function)
   playNextEvent = () => {
     const { markers, currentStep } = this.state;
 

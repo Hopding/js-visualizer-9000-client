@@ -1,0 +1,15 @@
+.scroll-on-hover-x {
+  overflow: hidden;
+}
+
+.scroll-on-hover-x:hover {
+  overflow-x: auto;
+}
+
+.scroll-on-hover-y {
+  overflow: hidden;
+}
+
+.scroll-on-hover-y:hover {
+  overflow-y: auto;
+}

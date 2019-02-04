@@ -96,8 +96,8 @@ const AppRoot = ({
   onClickStepBack: void => any,
   onClickStep: void => any,
 |}) => (
-  <MuiThemeProvider theme={theme}>
-    <div style={styles.container}>
+  <div style={styles.container}>
+    <MuiThemeProvider theme={theme}>
 
       <div style={styles.leftContainer}>
         <Header />
@@ -142,9 +142,9 @@ const AppRoot = ({
         onClickStepBack={onClickStepBack}
         onClickStep={onClickStep}
       />
-
-    </div>
-  </MuiThemeProvider>
+      
+    </MuiThemeProvider>
+  </div>
 );
 
 export default AppRoot;

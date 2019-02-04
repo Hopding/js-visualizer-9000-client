@@ -104,4 +104,23 @@ fetch('https://www.google.com')
   .then(function bingbang() {})
 `.trim(),
 },
+{
+  name: 'Arrow Functions',
+  value: `
+const a = () => console.log('A');
+const b = () => 1 + 2;
+const c = () => '21';
+const d = () => ({ foo: [] });
+const e = () => a;
+// const f = () => <= () = f tsnoc
+
+
+a()
+b()
+c()
+d()
+e()
+f()
+`.trim(),
+}
 ];

@@ -11,6 +11,7 @@ import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
 
 import { getPastelForIndex } from '../styles/colors';
+import '../styles/index.css';
 
 const styles = theme => ({
   card: {
@@ -100,9 +101,8 @@ class CallStack extends React.Component<Props> {
             ref={this.contentRef}
             style={{
               height: contentHeight === undefined ? '100%' : contentHeight,
-              overflow: 'scroll',
-              paddingRight: 6,
             }}
+            className="scroll-on-hover-y"
           >
             {contentHeight !== undefined && (
               <PoseGroup>

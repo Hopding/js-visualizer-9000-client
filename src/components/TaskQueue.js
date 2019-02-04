@@ -11,6 +11,7 @@ import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
 
 import { pastels } from '../styles/colors';
+import '../styles/index.css';
 
 const styles = theme => ({
   card: {
@@ -103,10 +104,9 @@ class TaskQueue extends React.Component<Props> {
               display: 'flex',
               flexDirection: 'row',
               width: contentWidth === undefined ? '100%' : contentWidth,
-              overflow: 'scroll',
               maxHeight: 70,
-              paddingBottom: 5.5,
             }}
+            className="scroll-on-hover-x"
           >
             {contentWidth !== undefined && (
               <PoseGroup preEnterPose="preEnter">
