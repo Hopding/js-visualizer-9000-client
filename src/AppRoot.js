@@ -102,7 +102,6 @@ const AppRoot = ({
       <div style={styles.leftContainer}>
         <Header />
         <div style={styles.codeControlsContainer}>
-          {/*// TODO: Disable this while "running"*/}
           <ExampleSelector
             example={example}
             locked={mode === 'running'}

@@ -1,6 +1,14 @@
 import React, { Component } from 'react';
 import uuid from 'uuid/v4';
 
+// NOTE: We're using a copied version of `notistack` for now, since the version
+//       that is currently published to NPM doesn't provide the `closeSnackbar`
+//       prop (which we need).
+import { SnackbarProvider, withSnackbar } from './notistack';
+
+import IconButton from '@material-ui/core/IconButton';
+import CloseIcon from '@material-ui/icons/Close';
+
 import AppRoot from './AppRoot';
 
 const pause = (millis) => new Promise(resolve => setTimeout(resolve, millis));
@@ -9,8 +17,11 @@ const isNotIgnoredEvent = ({ type }) => [
   'EnterFunction', 'ExitFunction',
   'EnqueueMicrotask', 'DequeueMicrotask',
   'InitTimeout', 'BeforeTimeout',
-  'Rerender',
+  'Rerender', 'ConsoleLog',
+  'ConsoleWarn', 'ConsoleError',
 ].includes(type);
+
+const PRETTY_MUCH_INFINITY = 9999999999;
 
 class App extends Component {
   state = {
@@ -27,14 +38,35 @@ class App extends Component {
 
   currEventIdx: number = 0;
   events: { type: string, payload: any }[] = [];
+  snackbarIds: string[] = [];
 
   componentDidMount() {
     const code = localStorage.getItem('code') || '';
     this.setState({ code });
   }
 
+  showSnackbar = (variant: 'info' | 'warning' | 'error', msg: string) => {
+    const { enqueueSnackbar } = this.props;
+    const key = uuid();
+    this.snackbarIds.push(key);
+    enqueueSnackbar(msg, {
+      key,
+      variant,
+      autoHideDuration: PRETTY_MUCH_INFINITY,
+      action: <IconButton color="inherit"><CloseIcon /></IconButton>,
+    });
+  }
+
+  hideAllSnackbars = () => {
+    const { closeSnackbar } = this.props;
+    this.snackbarIds.forEach(id => {
+      closeSnackbar(null, 'Programmatically hiding all snackbars', id);
+    });
+  }
+
   handleChangeExample = (evt: { target: { value: string } }) => {
     const { value } = evt.target;
+    this.hideAllSnackbars();
     this.setState({
       code: value === 'none' ? '' : value,
       example: evt.target.value,
@@ -54,6 +86,7 @@ class App extends Component {
   }
 
   handleClickEdit = () => {
+    this.hideAllSnackbars();
     this.setState({
       mode: 'editing',
       frames: [],
@@ -118,9 +151,18 @@ class App extends Component {
 
     const {
       type,
-      payload: { id, name, callbackName, start, end },
+      payload: { id, name, callbackName, start, end, message },
     } = this.events[this.currEventIdx];
 
+    if (type === 'ConsoleLog') {
+      this.showSnackbar('info', message);
+    }
+    if (type === 'ConsoleWarn') {
+      this.showSnackbar('warning', message);
+    }
+    if (type === 'ConsoleError') {
+      this.showSnackbar('error', message);
+    }
     if (type === 'EnterFunction') {
       this.setState({ markers: markers.concat({ start, end }) });
       this.pushCallStackFrame(name);
@@ -254,4 +296,10 @@ class App extends Component {
   }
 }
 
-export default App;
+const AppWithSnackbar = withSnackbar(App);
+
+export default () => (
+  <SnackbarProvider maxSnack={4}>
+    <AppWithSnackbar />
+  </SnackbarProvider>
+);

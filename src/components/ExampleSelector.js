@@ -49,7 +49,7 @@ const ExampleSelector = ({
           <em>Choose an Example</em>
         </MenuItem>
         {EXAMPLES.map(({ name, value }) => (
-          <MenuItem value={value}>{name}</MenuItem>
+          <MenuItem key={name} value={value}>{name}</MenuItem>
         ))}
       </Select>
     </FormControl>
