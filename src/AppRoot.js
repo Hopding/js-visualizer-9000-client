@@ -51,7 +51,7 @@ const styles = {
   },
   bottomRightContainer: {
     display: 'flex',
-    flex: 1,
+    flex: 2,
     flexDirection: 'row',
   },
 };

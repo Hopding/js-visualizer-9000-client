@@ -18,7 +18,6 @@ const styles = theme => ({
     paddingTop: theme.spacing.unit * 1,
     paddingBottom: theme.spacing.unit * 1,
     margin: theme.spacing.unit,
-    display: 'inline-block',
     // backgroundColor: '#fbf1d3',
     // backgroundColor: '#ffffff',
     backgroundColor: theme.palette.primary.main,
@@ -68,7 +67,7 @@ const CodeEditor = ({
   <Paper className={classes.root} elevation={1}>
     <AceEditor
       style={{
-        width: 450,
+        width: 500,
         height: '100%',
         marginLeft: -15,
         marginRight: -15,

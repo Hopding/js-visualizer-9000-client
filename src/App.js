@@ -19,6 +19,7 @@ const isNotIgnoredEvent = ({ type }) => [
   'InitTimeout', 'BeforeTimeout',
   'Rerender', 'ConsoleLog',
   'ConsoleWarn', 'ConsoleError',
+  'ErrorFunction',
 ].includes(type);
 
 const PRETTY_MUCH_INFINITY = 9999999999;
@@ -54,6 +55,10 @@ class App extends Component {
       variant,
       autoHideDuration: PRETTY_MUCH_INFINITY,
       action: <IconButton color="inherit"><CloseIcon /></IconButton>,
+      anchorOrigin: {
+        vertical: 'top',
+        horizontal: 'right',
+      },
     });
   }
 
@@ -162,6 +167,9 @@ class App extends Component {
     }
     if (type === 'ConsoleError') {
       this.showSnackbar('error', message);
+    }
+    if (type === 'ErrorFunction') {
+      this.showSnackbar('error', `Uncaught Exception in "${name}": ${message}`);
     }
     if (type === 'EnterFunction') {
       this.setState({ markers: markers.concat({ start, end }) });
@@ -299,7 +307,7 @@ class App extends Component {
 const AppWithSnackbar = withSnackbar(App);
 
 export default () => (
-  <SnackbarProvider maxSnack={4}>
+  <SnackbarProvider maxSnack={6}>
     <AppWithSnackbar />
   </SnackbarProvider>
 );
