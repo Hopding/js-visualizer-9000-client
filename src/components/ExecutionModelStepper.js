@@ -41,7 +41,7 @@ const stepTitles = [
 ];
 
 const stepDescriptions = [
-  'Synchronously execute the script as though it were a function call.',
+  'Synchronously execute the script as though it were a function body.',
   'Select the oldest Task from the Task Queue. Run it until the Call Stack is empty.',
   'Select the oldest Microtask from the Microtask Queue. Run it until the Call Stack is empty. Repeat until the Microtask Queue is empty.',
   'Rerender the UI. Then, return to step 2. (This step only applies to browsers, not NodeJS).',

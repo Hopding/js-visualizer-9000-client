@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import uuid from 'uuid/v4';
+import _ from 'lodash';
 
 // NOTE: We're using a copied version of `notistack` for now, since the version
 //       that is currently published to NPM doesn't provide the `closeSnackbar`
@@ -113,6 +114,7 @@ class App extends Component {
   handleClickRun = () => {
     const { code } = this.state;
 
+    this.hideAllSnackbars();
     this.setState({
       mode: 'running',
       frames: [],
@@ -134,12 +136,23 @@ class App extends Component {
       ws.addEventListener('message', (event) => {
         const events = JSON.parse(event.data);
         console.log('RunCode Events:', events);
-        this.currEventIdx = 0;
-        this.events = events;
-        this.setState({ mode: 'visualizing', currentStep: 'evaluateScript' });
+
+        if (events[0].type === 'UncaughtError') {
+          this.currEventIdx = 0;
+          const msg = _.get(events[0], 'payload.error.name') === 'SyntaxError'
+            ? 'Failed to run script due to syntax error.'
+            : 'Failed to run script.';
+          this.showSnackbar('error', msg);
+          this.setState({ mode: 'editing', currentStep: 'none' });
+        } else {
+          this.currEventIdx = 0;
+          this.events = events;
+          this.setState({ mode: 'visualizing', currentStep: 'evaluateScript' });
+        }
       });
     } catch (e) {
       this.currEventIdx = 0;
+      this.showSnackbar('error', 'Failed to connect to backend.');
       this.setState({ mode: 'editing', currentStep: 'none', markers: [] });
     }
   }
@@ -203,12 +216,13 @@ class App extends Component {
 
     this.currEventIdx += 1;
 
+    // TODO: Clean this up so it works and can be read...
     const nextEvent = this.events[this.indexOfNextEvent()];
     if (currentStep !== 'evaluateScript' && (!nextEvent || nextEvent.type === 'Rerender')) {
       this.setState({ currentStep: 'rerender' });
-    } else if (nextEvent.type === 'BeforeTimeout') {
+    } else if (nextEvent && nextEvent.type === 'BeforeTimeout') {
       this.setState({ currentStep: 'runTask' });
-    } else if (nextEvent.type === 'DequeueMicrotask') {
+    } else if (nextEvent && nextEvent.type === 'DequeueMicrotask') {
       this.setState({ currentStep: 'runMicrotasks' });
     }
 
