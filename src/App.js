@@ -158,23 +158,13 @@ class App extends Component {
     });
   }
 
-  indexOfNextEvent = () => {
-    const idx = this.events
-      .slice(this.currEventIdx)
-      .findIndex(isPlayableEvent);
-    if (idx === -1) return -1;
-    return this.currEventIdx + idx;
-  }
-
-  hasReachedEnd = () => this.indexOfNextEvent() === -1;
-
-  hasReachedEndOfEvents = () => this.currEventIdx >= this.events.length;
+  hasReachedEnd = () => this.currEventIdx >= this.events.length;
 
   getCurrentEvent = () => this.events[this.currEventIdx]
 
   seekToNextPlayableEvent = () => {
     while (
-      !this.hasReachedEndOfEvents() &&
+      !this.hasReachedEnd() &&
       !isPlayableEvent(this.getCurrentEvent())
     ) {
       /* Process non-playable event... */
