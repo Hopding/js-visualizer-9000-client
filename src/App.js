@@ -167,7 +167,15 @@ class App extends Component {
       !this.hasReachedEnd() &&
       !isPlayableEvent(this.getCurrentEvent())
     ) {
-      /* Process non-playable event... */
+      /* Process non-playable event: */
+      const { type, payload: { name, message } } = this.getCurrentEvent();
+      if (type === 'UncaughtError') {
+        this.showSnackbar('error', `Uncaught ${name} Exception: ${message}`);
+      }
+      if (type === 'EarlyTermination') {
+        this.showSnackbar('warning', message);
+      }
+
       this.currEventIdx += 1;
     }
   }

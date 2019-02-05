@@ -132,17 +132,19 @@ const FabControls = ({
         aria-label="Pause Auto Step"
         placement="left"
       >
-        <Zoom in={visible && isAutoPlaying} className={classes.yellowFab}>
-          <YellowFab
-            color="primary"
-            size="medium"
-            aria-label="pause"
-            disabled={hasReachedEnd}
-            onClick={onClickPauseAutoStep}
-          >
-            <PauseIcon />
-          </YellowFab>
-        </Zoom>
+        <div>
+          <Zoom in={visible && isAutoPlaying} className={classes.yellowFab}>
+            <YellowFab
+              color="primary"
+              size="medium"
+              aria-label="pause"
+              disabled={hasReachedEnd}
+              onClick={onClickPauseAutoStep}
+            >
+              <PauseIcon />
+            </YellowFab>
+          </Zoom>
+        </div>
       </Tooltip>
     )}
     <Tooltip
@@ -151,17 +153,19 @@ const FabControls = ({
       aria-label="Step Back"
       placement="left"
     >
-      <Zoom in={visible} className={classes.fab}>
-        <PinkFab
-          color="primary"
-          size="medium"
-          aria-label="step-back"
-          disabled={isAutoPlaying}
-          onClick={onClickStepBack}
-        >
-          <ReplayIcon />
-        </PinkFab>
-      </Zoom>
+      <div>
+        <Zoom in={visible} className={classes.fab}>
+          <PinkFab
+            color="primary"
+            size="medium"
+            aria-label="step-back"
+            disabled={isAutoPlaying}
+            onClick={onClickStepBack}
+          >
+            <ReplayIcon />
+          </PinkFab>
+        </Zoom>
+      </div>
     </Tooltip>
     <Zoom style={{ transitionDelay: '0ms' }} in={visible}>
       <GreenFab
