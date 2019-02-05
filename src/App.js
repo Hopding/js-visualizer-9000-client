@@ -35,8 +35,8 @@ const PRETTY_MUCH_INFINITY = 9999999999;
 
 class App extends Component {
   state = {
-    // tasks: _.range(10).map(id => ({ id, name: 'setTimeout' })),
-    // microtasks: _.range(10).map(id => ({ id, name: 'resolve' })),
+    // tasks: _.range(15).map(id => ({ id, name: 'setTimeout' })),
+    // microtasks: _.range(15).map(id => ({ id, name: 'resolve' })),
     // frames: _.range(20).map(id => ({ id, name: 'foo()' })),
     tasks: [],
     microtasks: [],

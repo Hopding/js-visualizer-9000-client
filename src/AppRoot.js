@@ -14,7 +14,6 @@ import ExampleSelector from './components/ExampleSelector';
 import CodeEditor from './components/CodeEditor';
 import CallStack from './components/CallStack';
 import TaskQueue from './components/TaskQueue';
-import MicrotaskQueue from './components/MicrotaskQueue';
 import ExecutionModelStepper from './components/ExecutionModelStepper';
 import FabControls from './components/FabControls';
 
@@ -55,7 +54,7 @@ const styles = {
   },
   bottomRightContainer: {
     display: 'flex',
-    flex: 2,
+    flex: 1,
     flexDirection: 'row',
     overflow: 'hidden',
   },
@@ -128,12 +127,13 @@ const AppRoot = ({
 
       <div style={styles.rightContainer}>
         <div>
-          <TaskQueue tasks={tasks} />
-          <MicrotaskQueue microtasks={microtasks} />
+          <TaskQueue title="Task Queue" tasks={tasks} />
+          <TaskQueue title="Microtask Queue" tasks={microtasks} />
         </div>
         <div style={styles.bottomRightContainer}>
           <CallStack frames={frames} />
           <ExecutionModelStepper step={currentStep} />
+          <div className="hide-when-screen-shrinks" />
           {/*<StatsTable />*/}
         </div>
       </div>

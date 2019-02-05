@@ -19,11 +19,15 @@ const styles = theme => ({
     margin: theme.spacing.unit,
     height: 120,
     backgroundColor: theme.palette.primary.main,
+    display: 'flex',
   },
   header: {
     padding: 0,
   },
   content: {
+    display: 'flex',
+    flexDirection: 'column',
+    flex: 1,
   },
   task: {
     paddingTop: theme.spacing.unit * 1,
@@ -76,39 +80,58 @@ const TaskDiv = posed(Task)({
 
 type Props = {
   classes: any,
+  title: string,
   tasks: { id: string, name: string }[],
 };
 
 class TaskQueue extends React.Component<Props> {
-  state = { contentWidth: undefined, }
+  state = { contentWidth: undefined, contentHeight: undefined };
 
   contentRef = React.createRef();
 
   componentDidMount() {
-    // TODO: Make this dynamic. This doesn't relayout if the screen size changes
-    const contentWidth = this.contentRef.current.clientWidth;
-    this.setState({ contentWidth });
+    this.handleResize();
+    window.addEventListener('resize', this.handleResize);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.handleResize);
+  }
+
+  handleResize = () => {
+    const { width, height } = this.getContentDims();
+    this.setState({ contentWidth: width, contentHeight: height });
+  }
+
+  getContentDims = () => {
+    const contentDiv = this.contentRef.current;
+    return contentDiv
+      ? { width: contentDiv.clientWidth, height: contentDiv.clientHeight }
+      : { width: undefined, height: undefined };
   }
 
   render() {
-    const { classes, tasks } = this.props;
-    const { contentWidth } = this.state;
+    const { classes, tasks, title } = this.props;
+    const { contentWidth, contentHeight } = this.state;
 
     return (
       <Card className={classes.card}>
         <CardContent className={classes.content}>
-          <CardHeader title="Task Queue" className={classes.header} />
-          <div
-            ref={this.contentRef}
-            style={{
-              display: 'flex',
-              flexDirection: 'row',
-              width: contentWidth === undefined ? '100%' : contentWidth,
-              maxHeight: 70,
-            }}
-            className="scroll-on-hover-x"
-          >
-            {contentWidth !== undefined && (
+          <CardHeader title={title} className={classes.header} />
+          <div style={{ display: 'flex', flexDirection: 'row', flex: 1 }}>
+            <div ref={this.contentRef} style={{ flex: 1 }} />
+            <div
+              style={{
+                width: contentWidth,
+                height: contentHeight,
+                position: 'absolute',
+                display: 'flex',
+                flexWrap: 'nowrap',
+                flexDirection: 'row',
+                paddingBottom: 20,
+              }}
+              className="scroll-on-hover-x"
+            >
               <PoseGroup preEnterPose="preEnter">
                 {tasks.map(({ id, name }, idx) => (
                   <TaskDiv
@@ -121,7 +144,7 @@ class TaskQueue extends React.Component<Props> {
                   </TaskDiv>
                 ))}
               </PoseGroup>
-            )}
+            </div>
           </div>
         </CardContent>
       </Card>

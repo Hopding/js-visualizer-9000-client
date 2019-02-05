@@ -17,6 +17,7 @@ const styles = theme => ({
   card: {
     margin: theme.spacing.unit,
     maxWidth: 225,
+    minWidth: 225,
     flex: 1,
     display: 'flex',
     flexDirection: 'column',
@@ -94,7 +95,6 @@ class CallStack extends React.Component<Props> {
 
   handleResize = () => {
     const { width, height } = this.getContentDims();
-    console.log({ width, height });
     this.setState({ contentWidth: width, contentHeight: height });
   }
 

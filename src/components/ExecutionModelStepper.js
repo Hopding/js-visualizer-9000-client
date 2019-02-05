@@ -27,7 +27,7 @@ const styles = theme => ({
     paddingBottom: theme.spacing.unit * 1,
     margin: theme.spacing.unit,
     backgroundColor: theme.palette.primary.main,
-    width: 300,
+    flex: 1,
     overflow: 'scroll',
   },
   stepper: {
