@@ -28,6 +28,8 @@ export const fetchEventsForCode = (code: string) =>
         } else {
           resolve(events);
         }
+
+        ws.close();
       });
     } catch (e) {
       reject(new Error('Failed to connect to backend.'));

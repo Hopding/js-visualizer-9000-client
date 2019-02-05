@@ -17,15 +17,6 @@ import { fetchEventsForCode } from './utils/events';
 
 const pause = (millis) => new Promise(resolve => setTimeout(resolve, millis));
 
-// const isNotIgnoredEvent = ({ type }) => [
-//   'EnterFunction', 'ExitFunction',
-//   'EnqueueMicrotask', 'DequeueMicrotask',
-//   'InitTimeout', 'BeforeTimeout',
-//   'Rerender', 'ConsoleLog',
-//   'ConsoleWarn', 'ConsoleError',
-//   'ErrorFunction',
-// ].includes(type);
-
 const isPlayableEvent = ({ type }) => [
   'EnterFunction',
   'ExitFunction',
@@ -193,7 +184,7 @@ class App extends Component {
 
   // TODO: Handle uncaught errors (e.g. undefined calling undefined function)
   playNextEvent = () => {
-    const { markers, currentStep } = this.state;
+    const { markers } = this.state;
 
     // TODO: Handle trailing non-playable events...
     this.seekToNextPlayableEvent();
@@ -228,15 +219,14 @@ class App extends Component {
     this.seekToNextPlayableEvent();
     const nextEvent = this.getCurrentEvent();
 
-    // TODO: Clean this up so it works and can be read...
-    // const nextEvent = this.events[this.indexOfNextEvent()];
-    if (currentStep !== 'evaluateScript' && (!nextEvent || nextEvent.type === 'Rerender')) {
-      this.setState({ currentStep: 'rerender' });
-    } else if (nextEvent && nextEvent.type === 'BeforeTimeout') {
-      this.setState({ currentStep: 'runTask' });
-    } else if (nextEvent && nextEvent.type === 'DequeueMicrotask') {
-      this.setState({ currentStep: 'runMicrotasks' });
-    }
+    const currentStep =
+        nextEvent      === undefined          ? 'rerender'
+      : nextEvent.type === 'Rerender'         ? 'rerender'
+      : nextEvent.type === 'BeforeTimeout'    ? 'runTask'
+      : nextEvent.type === 'DequeueMicrotask' ? 'runMicrotasks'
+      : undefined;
+
+    if (currentStep) this.setState({ currentStep });
 
     // Automatically move task functions into the call stack
     if (
@@ -246,69 +236,6 @@ class App extends Component {
       this.playNextEvent();
     }
   }
-
-  // // TODO: Handle uncaught errors (e.g. undefined calling undefined function)
-  // playNextEvent = () => {
-  //   const { markers, currentStep } = this.state;
-  //
-  //   const idx = this.indexOfNextEvent();
-  //   if (idx === -1) return true;
-  //   this.currEventIdx = idx;
-  //
-  //   const {
-  //     type,
-  //     payload: { id, name, callbackName, start, end, message },
-  //   } = this.events[this.currEventIdx];
-  //
-  //   if (type === 'ConsoleLog') {
-  //     this.showSnackbar('info', message);
-  //   }
-  //   if (type === 'ConsoleWarn') {
-  //     this.showSnackbar('warning', message);
-  //   }
-  //   if (type === 'ConsoleError') {
-  //     this.showSnackbar('error', message);
-  //   }
-  //   if (type === 'ErrorFunction') {
-  //     this.showSnackbar('error', `Uncaught Exception in "${name}": ${message}`);
-  //   }
-  //   if (type === 'EnterFunction') {
-  //     this.setState({ markers: markers.concat({ start, end }) });
-  //     this.pushCallStackFrame(name);
-  //   }
-  //   if (type === 'ExitFunction') {
-  //     this.setState({ markers: markers.slice(0, markers.length - 1) });
-  //     this.popCallStackFrame();
-  //   }
-  //   if (type === 'EnqueueMicrotask') {
-  //     // this.enqueueMicrotask(`Microtask(${name})`);
-  //     this.enqueueMicrotask(name);
-  //   }
-  //   if (type === 'DequeueMicrotask') {
-  //     this.dequeueMicrotask();
-  //   }
-  //   if (type === 'InitTimeout') {
-  //     // this.enqueueTask(id, `Task(${callbackName})`);
-  //     this.enqueueTask(id, callbackName);
-  //   }
-  //   if (type === 'BeforeTimeout') {
-  //     this.dequeueTask(id);
-  //   }
-  //
-  //   this.currEventIdx += 1;
-  //
-  //   // TODO: Clean this up so it works and can be read...
-  //   const nextEvent = this.events[this.indexOfNextEvent()];
-  //   if (currentStep !== 'evaluateScript' && (!nextEvent || nextEvent.type === 'Rerender')) {
-  //     this.setState({ currentStep: 'rerender' });
-  //   } else if (nextEvent && nextEvent.type === 'BeforeTimeout') {
-  //     this.setState({ currentStep: 'runTask' });
-  //   } else if (nextEvent && nextEvent.type === 'DequeueMicrotask') {
-  //     this.setState({ currentStep: 'runMicrotasks' });
-  //   }
-  //
-  //   return false;
-  // }
 
   autoPlayEvents = () => {
     this.setState({ isAutoPlaying: true }, async () => {
