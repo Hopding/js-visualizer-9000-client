@@ -1,7 +1,8 @@
 /* @flow */
 import _ from 'lodash';
 
-const URL = 'ws://localhost:8080';
+// const URL = 'ws://localhost:8080';
+const URL = 'ws://js-visualizer-9000.herokuapp.com';
 
 export const fetchEventsForCode = (code: string) =>
   new Promise((resolve, reject) => {

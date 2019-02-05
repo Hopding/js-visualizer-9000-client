@@ -180,7 +180,6 @@ class App extends Component {
     }
   }
 
-  // TODO: Handle uncaught errors (e.g. undefined calling undefined function)
   playNextEvent = () => {
     const { markers } = this.state;
 
@@ -250,6 +249,60 @@ class App extends Component {
       }
     });
   }
+
+  // playEventBackwards = () => {
+  //   const { markers } = this.state;
+  //
+  //   // TODO: Handle trailing non-playable events...
+  //   this.seekToNextPlayableEvent();
+  //
+  //   if (!this.getCurrentEvent()) return;
+  //
+  //   const {
+  //     type,
+  //     payload: { id, name, callbackName, start, end, message },
+  //   } = this.getCurrentEvent();
+  //
+  //   if (type === 'ConsoleLog') this.showSnackbar('info', message);
+  //   if (type === 'ConsoleWarn') this.showSnackbar('warning', message);
+  //   if (type === 'ConsoleError') this.showSnackbar('error', message);
+  //   if (type === 'ErrorFunction') {
+  //     this.showSnackbar('error', `Uncaught Exception in "${name}": ${message}`);
+  //   }
+  //   if (type === 'EnterFunction') {
+  //     this.setState({ markers: markers.concat({ start, end }) });
+  //     this.pushCallStackFrame(name);
+  //   }
+  //   if (type === 'ExitFunction') {
+  //     this.setState({ markers: markers.slice(0, markers.length - 1) });
+  //     this.popCallStackFrame();
+  //   }
+  //   if (type === 'EnqueueMicrotask') this.enqueueMicrotask(name);
+  //   if (type === 'DequeueMicrotask') this.dequeueMicrotask();
+  //   if (type === 'InitTimeout') this.enqueueTask(id, callbackName);
+  //   if (type === 'BeforeTimeout') this.dequeueTask(id);
+  //
+  //   this.currEventIdx += 1;
+  //   this.seekToNextPlayableEvent();
+  //   const nextEvent = this.getCurrentEvent();
+  //
+  //   const currentStep =
+  //       nextEvent      === undefined          ? 'rerender'
+  //     : nextEvent.type === 'Rerender'         ? 'rerender'
+  //     : nextEvent.type === 'BeforeTimeout'    ? 'runTask'
+  //     : nextEvent.type === 'DequeueMicrotask' ? 'runMicrotasks'
+  //     : undefined;
+  //
+  //   if (currentStep) this.setState({ currentStep });
+  //
+  //   // Automatically move task functions into the call stack
+  //   if (
+  //     ['DequeueMicrotask', 'BeforeTimeout'].includes(type) &&
+  //     nextEvent.type === 'EnterFunction'
+  //   ) {
+  //     this.playNextEvent();
+  //   }
+  // }
 
   pushCallStackFrame = (name: string) => {
     const { frames } = this.state;
