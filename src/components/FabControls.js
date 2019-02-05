@@ -18,7 +18,13 @@ import pink from '@material-ui/core/colors/pink';
 import blue from '@material-ui/core/colors/blue';
 import yellow from '@material-ui/core/colors/yellow';
 
-const greenTheme = createMuiTheme({ palette: { primary: green } });
+const createTheme = (primary) =>createMuiTheme({
+  palette: { primary },
+  typography: { useNextVariants: true },
+});
+
+
+const greenTheme = createTheme(green);
 
 const GreenFab = (props) => (
   <MuiThemeProvider theme={greenTheme}>
@@ -26,7 +32,7 @@ const GreenFab = (props) => (
   </MuiThemeProvider>
 );
 
-const pinkTheme = createMuiTheme({ palette: { primary: pink } });
+const pinkTheme = createTheme(pink);
 
 const PinkFab = (props) => (
   <MuiThemeProvider theme={pinkTheme}>
@@ -34,7 +40,7 @@ const PinkFab = (props) => (
   </MuiThemeProvider>
 );
 
-const blueTheme = createMuiTheme({ palette: { primary: blue } });
+const blueTheme = createTheme(blue);
 
 const BlueFab = (props) => (
   <MuiThemeProvider theme={blueTheme}>
@@ -42,7 +48,7 @@ const BlueFab = (props) => (
   </MuiThemeProvider>
 );
 
-const yellowTheme = createMuiTheme({ palette: { primary: yellow } });
+const yellowTheme = createTheme(yellow);
 
 const YellowFab = (props) => (
   <MuiThemeProvider theme={yellowTheme}>
@@ -104,17 +110,19 @@ const FabControls = ({
         aria-label="Auto Step"
         placement="left"
       >
-        <Zoom in={visible && !isAutoPlaying} className={classes.fab}>
-          <BlueFab
-            color="primary"
-            size="medium"
-            aria-label="auto-play"
-            disabled={hasReachedEnd}
-            onClick={onClickAutoStep}
-          >
-            <FastForwardIcon />
-          </BlueFab>
-        </Zoom>
+        <div>
+          <Zoom in={visible && !isAutoPlaying} className={classes.fab}>
+            <BlueFab
+              color="primary"
+              size="medium"
+              aria-label="auto-play"
+              disabled={hasReachedEnd}
+              onClick={onClickAutoStep}
+            >
+              <FastForwardIcon />
+            </BlueFab>
+          </Zoom>
+        </div>
       </Tooltip>
     )}
     {isAutoPlaying && (

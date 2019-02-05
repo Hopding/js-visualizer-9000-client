@@ -16,13 +16,17 @@ import CallStack from './components/CallStack';
 import TaskQueue from './components/TaskQueue';
 import MicrotaskQueue from './components/MicrotaskQueue';
 import ExecutionModelStepper from './components/ExecutionModelStepper';
-import StatsTable from './components/StatsTable';
 import FabControls from './components/FabControls';
+
+// import StatsTable from './components/StatsTable';
 
 const theme = createMuiTheme({
   palette: {
     primary: yellow,
     secondary: blue,
+  },
+  typography: {
+    useNextVariants: true,
   },
 });
 
@@ -142,7 +146,7 @@ const AppRoot = ({
         onClickStepBack={onClickStepBack}
         onClickStep={onClickStep}
       />
-      
+
     </MuiThemeProvider>
   </div>
 );

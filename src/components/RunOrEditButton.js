@@ -14,7 +14,12 @@ import green from '@material-ui/core/colors/green';
 import blue from '@material-ui/core/colors/blue';
 import yellow from '@material-ui/core/colors/yellow';
 
-const greenTheme = createMuiTheme({ palette: { primary: green } });
+const createTheme = (primary) =>createMuiTheme({
+  palette: { primary },
+  typography: { useNextVariants: true },
+});
+
+const greenTheme = createTheme(green);
 
 const GreenButton = (props) => (
   <MuiThemeProvider theme={greenTheme}>
@@ -22,7 +27,7 @@ const GreenButton = (props) => (
   </MuiThemeProvider>
 );
 
-const blueTheme = createMuiTheme({ palette: { primary: blue } });
+const blueTheme = createTheme(blue);
 
 const BlueButton = (props) => (
   <MuiThemeProvider theme={blueTheme}>

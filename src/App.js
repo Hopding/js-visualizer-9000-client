@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import uuid from 'uuid/v4';
+
+// eslint-disable-next-line no-unused-vars
 import _ from 'lodash';
 
 // NOTE: We're using a copied version of `notistack` for now, since the version
@@ -11,15 +13,30 @@ import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 
 import AppRoot from './AppRoot';
+import { fetchEventsForCode } from './utils/events';
 
 const pause = (millis) => new Promise(resolve => setTimeout(resolve, millis));
 
-const isNotIgnoredEvent = ({ type }) => [
-  'EnterFunction', 'ExitFunction',
-  'EnqueueMicrotask', 'DequeueMicrotask',
-  'InitTimeout', 'BeforeTimeout',
-  'Rerender', 'ConsoleLog',
-  'ConsoleWarn', 'ConsoleError',
+// const isNotIgnoredEvent = ({ type }) => [
+//   'EnterFunction', 'ExitFunction',
+//   'EnqueueMicrotask', 'DequeueMicrotask',
+//   'InitTimeout', 'BeforeTimeout',
+//   'Rerender', 'ConsoleLog',
+//   'ConsoleWarn', 'ConsoleError',
+//   'ErrorFunction',
+// ].includes(type);
+
+const isPlayableEvent = ({ type }) => [
+  'EnterFunction',
+  'ExitFunction',
+  'EnqueueMicrotask',
+  'DequeueMicrotask',
+  'InitTimeout',
+  'BeforeTimeout',
+  'Rerender',
+  'ConsoleLog',
+  'ConsoleWarn',
+  'ConsoleError',
   'ErrorFunction',
 ].includes(type);
 
@@ -27,12 +44,12 @@ const PRETTY_MUCH_INFINITY = 9999999999;
 
 class App extends Component {
   state = {
-    // tasks: [],
-    tasks: _.range(10).map(id => ({ id, name: 'setTimeout' })),
-    // microtasks: [],
-    microtasks: _.range(10).map(id => ({ id, name: 'resolve' })),
-    // frames: [],
-    frames: _.range(20).map(id => ({ id, name: 'foo()' })),
+    // tasks: _.range(10).map(id => ({ id, name: 'setTimeout' })),
+    // microtasks: _.range(10).map(id => ({ id, name: 'resolve' })),
+    // frames: _.range(20).map(id => ({ id, name: 'foo()' })),
+    tasks: [],
+    microtasks: [],
+    frames: [],
     markers: [],
     mode: 'editing', // 'editing' | 'running' | 'visualizing'
     code: '',
@@ -55,6 +72,63 @@ class App extends Component {
   componentDidMount() {
     const code = localStorage.getItem('code') || '';
     this.setState({ code });
+  }
+
+  handleChangeExample = (evt: { target: { value: string } }) => {
+    const { value } = evt.target;
+    this.setState({
+      code: value === 'none' ? '' : value,
+      example: evt.target.value,
+    });
+    this.transitionToEditMode();
+  }
+
+  handleChangeCode = (code: string) => {
+    this.setState({ code });
+    localStorage.setItem('code', code);
+  }
+
+  handleClickEdit = () => {
+    this.transitionToEditMode();
+  }
+
+  handleClickRun = async () => {
+    const { code } = this.state;
+
+    this.hideAllSnackbars();
+    this.setState({
+      mode: 'running',
+      frames: [],
+      tasks: [],
+      microtasks: [],
+      markers: [],
+      isAutoPlaying: false,
+      currentStep: 'none',
+    });
+
+    try {
+      const events = await fetchEventsForCode(code);
+      this.currEventIdx = 0;
+      this.events = events;
+      this.setState({ mode: 'visualizing', currentStep: 'evaluateScript' });
+    } catch(e) {
+      this.currEventIdx = 0;
+      this.showSnackbar('error', e.message);
+      this.setState({ mode: 'editing', currentStep: 'none' });
+    }
+  }
+
+  handleClickPauseAutoStep = () => {
+    this.setState({ isAutoPlaying: false });
+  }
+
+  handleClickAutoStep = () => {
+    // TODO: Add isAutoPlaying to state to disable other buttons...
+    this.autoPlayEvents();
+  }
+
+  handleClickStep = () => {
+    this.playNextEvent();
   }
 
   showSnackbar = (variant: 'info' | 'warning' | 'error', msg: string) => {
@@ -80,28 +154,7 @@ class App extends Component {
     });
   }
 
-  handleChangeExample = (evt: { target: { value: string } }) => {
-    const { value } = evt.target;
-    this.hideAllSnackbars();
-    this.setState({
-      code: value === 'none' ? '' : value,
-      example: evt.target.value,
-      mode: 'editing',
-      frames: [],
-      tasks: [],
-      microtasks: [],
-      markers: [],
-      isAutoPlaying: false,
-      currentStep: 'none',
-    });
-  }
-
-  handleChangeCode = (code: string) => {
-    this.setState({ code });
-    localStorage.setItem('code', code);
-  }
-
-  handleClickEdit = () => {
+  transitionToEditMode = () => {
     this.hideAllSnackbars();
     this.setState({
       mode: 'editing',
@@ -112,86 +165,49 @@ class App extends Component {
       isAutoPlaying: false,
       currentStep: 'none',
     });
-  }
-
-  handleClickRun = () => {
-    const { code } = this.state;
-
-    this.hideAllSnackbars();
-    this.setState({
-      mode: 'running',
-      frames: [],
-      tasks: [],
-      microtasks: [],
-      markers: [],
-      isAutoPlaying: false,
-      currentStep: 'none',
-    });
-
-    try {
-      const ws = new WebSocket('ws://localhost:8080');
-
-      ws.addEventListener('open', (event) => {
-        const command = { type: 'RunCode', payload: code };
-        ws.send(JSON.stringify(command))
-      });
-
-      ws.addEventListener('message', (event) => {
-        const events = JSON.parse(event.data || [{}]);
-        console.log('RunCode Events:', events);
-
-        if (events[0].type === 'UncaughtError') {
-          this.currEventIdx = 0;
-          const msg = _.get(events[0], 'payload.error.name') === 'SyntaxError'
-            ? 'Failed to run script due to syntax error.'
-            : 'Failed to run script.';
-          this.showSnackbar('error', msg);
-          this.setState({ mode: 'editing', currentStep: 'none' });
-        } else {
-          this.currEventIdx = 0;
-          this.events = events;
-          this.setState({ mode: 'visualizing', currentStep: 'evaluateScript' });
-        }
-      });
-    } catch (e) {
-      this.currEventIdx = 0;
-      this.showSnackbar('error', 'Failed to connect to backend.');
-      this.setState({ mode: 'editing', currentStep: 'none', markers: [] });
-    }
   }
 
   indexOfNextEvent = () => {
     const idx = this.events
       .slice(this.currEventIdx)
-      .findIndex(isNotIgnoredEvent);
+      .findIndex(isPlayableEvent);
     if (idx === -1) return -1;
     return this.currEventIdx + idx;
   }
 
   hasReachedEnd = () => this.indexOfNextEvent() === -1;
 
+  hasReachedEndOfEvents = () => this.currEventIdx >= this.events.length;
+
+  getCurrentEvent = () => this.events[this.currEventIdx]
+
+  seekToNextPlayableEvent = () => {
+    while (
+      !this.hasReachedEndOfEvents() &&
+      !isPlayableEvent(this.getCurrentEvent())
+    ) {
+      /* Process non-playable event... */
+      this.currEventIdx += 1;
+    }
+  }
+
   // TODO: Handle uncaught errors (e.g. undefined calling undefined function)
   playNextEvent = () => {
     const { markers, currentStep } = this.state;
 
-    const idx = this.indexOfNextEvent();
-    if (idx === -1) return true;
-    this.currEventIdx = idx;
+    // TODO: Handle trailing non-playable events...
+    this.seekToNextPlayableEvent();
+
+    if (!this.getCurrentEvent()) return;
 
     const {
       type,
       payload: { id, name, callbackName, start, end, message },
-    } = this.events[this.currEventIdx];
+    } = this.getCurrentEvent();
 
-    if (type === 'ConsoleLog') {
-      this.showSnackbar('info', message);
-    }
-    if (type === 'ConsoleWarn') {
-      this.showSnackbar('warning', message);
-    }
-    if (type === 'ConsoleError') {
-      this.showSnackbar('error', message);
-    }
+    if (type === 'ConsoleLog') this.showSnackbar('info', message);
+    if (type === 'ConsoleWarn') this.showSnackbar('warning', message);
+    if (type === 'ConsoleError') this.showSnackbar('error', message);
     if (type === 'ErrorFunction') {
       this.showSnackbar('error', `Uncaught Exception in "${name}": ${message}`);
     }
@@ -203,25 +219,17 @@ class App extends Component {
       this.setState({ markers: markers.slice(0, markers.length - 1) });
       this.popCallStackFrame();
     }
-    if (type === 'EnqueueMicrotask') {
-      // this.enqueueMicrotask(`Microtask(${name})`);
-      this.enqueueMicrotask(name);
-    }
-    if (type === 'DequeueMicrotask') {
-      this.dequeueMicrotask();
-    }
-    if (type === 'InitTimeout') {
-      // this.enqueueTask(id, `Task(${callbackName})`);
-      this.enqueueTask(id, callbackName);
-    }
-    if (type === 'BeforeTimeout') {
-      this.dequeueTask(id);
-    }
+    if (type === 'EnqueueMicrotask') this.enqueueMicrotask(name);
+    if (type === 'DequeueMicrotask') this.dequeueMicrotask();
+    if (type === 'InitTimeout') this.enqueueTask(id, callbackName);
+    if (type === 'BeforeTimeout') this.dequeueTask(id);
 
     this.currEventIdx += 1;
+    this.seekToNextPlayableEvent();
+    const nextEvent = this.getCurrentEvent();
 
     // TODO: Clean this up so it works and can be read...
-    const nextEvent = this.events[this.indexOfNextEvent()];
+    // const nextEvent = this.events[this.indexOfNextEvent()];
     if (currentStep !== 'evaluateScript' && (!nextEvent || nextEvent.type === 'Rerender')) {
       this.setState({ currentStep: 'rerender' });
     } else if (nextEvent && nextEvent.type === 'BeforeTimeout') {
@@ -230,8 +238,77 @@ class App extends Component {
       this.setState({ currentStep: 'runMicrotasks' });
     }
 
-    return false;
+    // Automatically move task functions into the call stack
+    if (
+      ['DequeueMicrotask', 'BeforeTimeout'].includes(type) &&
+      nextEvent.type === 'EnterFunction'
+    ) {
+      this.playNextEvent();
+    }
   }
+
+  // // TODO: Handle uncaught errors (e.g. undefined calling undefined function)
+  // playNextEvent = () => {
+  //   const { markers, currentStep } = this.state;
+  //
+  //   const idx = this.indexOfNextEvent();
+  //   if (idx === -1) return true;
+  //   this.currEventIdx = idx;
+  //
+  //   const {
+  //     type,
+  //     payload: { id, name, callbackName, start, end, message },
+  //   } = this.events[this.currEventIdx];
+  //
+  //   if (type === 'ConsoleLog') {
+  //     this.showSnackbar('info', message);
+  //   }
+  //   if (type === 'ConsoleWarn') {
+  //     this.showSnackbar('warning', message);
+  //   }
+  //   if (type === 'ConsoleError') {
+  //     this.showSnackbar('error', message);
+  //   }
+  //   if (type === 'ErrorFunction') {
+  //     this.showSnackbar('error', `Uncaught Exception in "${name}": ${message}`);
+  //   }
+  //   if (type === 'EnterFunction') {
+  //     this.setState({ markers: markers.concat({ start, end }) });
+  //     this.pushCallStackFrame(name);
+  //   }
+  //   if (type === 'ExitFunction') {
+  //     this.setState({ markers: markers.slice(0, markers.length - 1) });
+  //     this.popCallStackFrame();
+  //   }
+  //   if (type === 'EnqueueMicrotask') {
+  //     // this.enqueueMicrotask(`Microtask(${name})`);
+  //     this.enqueueMicrotask(name);
+  //   }
+  //   if (type === 'DequeueMicrotask') {
+  //     this.dequeueMicrotask();
+  //   }
+  //   if (type === 'InitTimeout') {
+  //     // this.enqueueTask(id, `Task(${callbackName})`);
+  //     this.enqueueTask(id, callbackName);
+  //   }
+  //   if (type === 'BeforeTimeout') {
+  //     this.dequeueTask(id);
+  //   }
+  //
+  //   this.currEventIdx += 1;
+  //
+  //   // TODO: Clean this up so it works and can be read...
+  //   const nextEvent = this.events[this.indexOfNextEvent()];
+  //   if (currentStep !== 'evaluateScript' && (!nextEvent || nextEvent.type === 'Rerender')) {
+  //     this.setState({ currentStep: 'rerender' });
+  //   } else if (nextEvent && nextEvent.type === 'BeforeTimeout') {
+  //     this.setState({ currentStep: 'runTask' });
+  //   } else if (nextEvent && nextEvent.type === 'DequeueMicrotask') {
+  //     this.setState({ currentStep: 'runMicrotasks' });
+  //   }
+  //
+  //   return false;
+  // }
 
   autoPlayEvents = () => {
     this.setState({ isAutoPlaying: true }, async () => {
@@ -286,19 +363,6 @@ class App extends Component {
     const { tasks } = this.state;
     const newTasks = tasks.filter(task => task.id !== id);
     this.setState({ tasks: newTasks });
-  }
-
-  handleClickPauseAutoStep = () => {
-    this.setState({ isAutoPlaying: false });
-  }
-
-  handleClickAutoStep = () => {
-    // TODO: Add isAutoPlaying to state to disable other buttons...
-    this.autoPlayEvents();
-  }
-
-  handleClickStep = () => {
-    this.playNextEvent();
   }
 
   render() {

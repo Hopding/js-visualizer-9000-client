@@ -17,6 +17,7 @@ const blueTheme = createMuiTheme({
   palette: { primary: blue },
   typography: {
     fontSize: 16,
+    useNextVariants: true,
   },
 });
 
@@ -26,7 +27,7 @@ const styles = theme => ({
     paddingBottom: theme.spacing.unit * 1,
     margin: theme.spacing.unit,
     backgroundColor: theme.palette.primary.main,
-    width: 225,
+    width: 300,
   },
   stepper: {
     backgroundColor: 'transparent',

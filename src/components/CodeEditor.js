@@ -93,6 +93,7 @@ const CodeEditor = ({
       showGutter
       highlightActiveLine={!locked}
       showLineNumbers
+      editorProps={{ $blockScrolling: Infinity }}
     />
   </Paper>
 );
