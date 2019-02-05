@@ -79,32 +79,50 @@ type Props = {
 };
 
 class CallStack extends React.Component<Props> {
-  state = { contentHeight: undefined, }
+  state = { contentWidth: undefined, contentHeight: undefined };
 
   contentRef = React.createRef();
 
   componentDidMount() {
-    // TODO: Make this dynamic. This doesn't relayout if the screen size changes
-    const contentHeight = this.contentRef.current.clientHeight;
-    this.setState({ contentHeight });
+    this.handleResize();
+    window.addEventListener('resize', this.handleResize);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.handleResize);
+  }
+
+  handleResize = () => {
+    const { width, height } = this.getContentDims();
+    console.log({ width, height });
+    this.setState({ contentWidth: width, contentHeight: height });
+  }
+
+  getContentDims = () => {
+    const contentDiv = this.contentRef.current;
+    return contentDiv
+      ? { width: contentDiv.clientWidth, height: contentDiv.clientHeight }
+      : { width: undefined, height: undefined };
   }
 
   render() {
     const { classes, frames } = this.props;
-    const { contentHeight } = this.state;
+    const { contentWidth, contentHeight } = this.state;
 
     return (
       <Card className={classes.card}>
         <CardContent className={classes.content}>
           <CardHeader title="Call Stack" className={classes.header} />
-          <div
-            ref={this.contentRef}
-            style={{
-              height: contentHeight === undefined ? '100%' : contentHeight,
-            }}
-            className="scroll-on-hover-y"
-          >
-            {contentHeight !== undefined && (
+          <div style={{ display: 'flex', flexDirection: 'row', flex: 1 }}>
+            <div ref={this.contentRef} style={{ flex: 1 }} />
+            <div
+              style={{
+                width: contentWidth,
+                height: contentHeight,
+                position: 'absolute',
+              }}
+              className="scroll-on-hover-y"
+            >
               <PoseGroup>
                 {frames.map(({ id, name }, idx) => (
                   <FrameDiv
@@ -117,7 +135,7 @@ class CallStack extends React.Component<Props> {
                   </FrameDiv>
                 ))}
               </PoseGroup>
-            )}
+            </div>
           </div>
         </CardContent>
       </Card>

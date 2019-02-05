@@ -28,6 +28,7 @@ const styles = theme => ({
     margin: theme.spacing.unit,
     backgroundColor: theme.palette.primary.main,
     width: 300,
+    overflow: 'scroll',
   },
   stepper: {
     backgroundColor: 'transparent',

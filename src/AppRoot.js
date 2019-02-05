@@ -57,6 +57,7 @@ const styles = {
     display: 'flex',
     flex: 2,
     flexDirection: 'row',
+    overflow: 'hidden',
   },
 };
 
