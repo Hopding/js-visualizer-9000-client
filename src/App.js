@@ -106,6 +106,7 @@ class App extends Component {
       this.currEventIdx = 0;
       this.showSnackbar('error', e.message);
       this.setState({ mode: 'editing', currentStep: 'none' });
+      console.error(e);
     }
   }
 

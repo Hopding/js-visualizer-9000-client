@@ -34,6 +34,7 @@ export const fetchEventsForCode = (code: string) =>
         ws.close();
       });
     } catch (e) {
-      reject(new Error('Failed to connect to backend.'));
+      e.message = `Failed to connect to backend: ${e.message}`;
+      reject(e);
     }
   });
