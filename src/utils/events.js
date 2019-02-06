@@ -1,7 +1,7 @@
 /* @flow */
 import _ from 'lodash';
 
-const URL = process.env.NODE_ENV === 'development'
+const URL = process.env.NODE_ENV === 'production'
   ? 'ws://js-visualizer-9000-server.herokuapp.com'
   : 'ws://localhost:8080';
 
