@@ -15,6 +15,8 @@ import CloseIcon from '@material-ui/icons/Close';
 import AppRoot from './AppRoot';
 import { fetchEventsForCode } from './utils/events';
 
+console.log('NODE_ENV:', process.env.NODE_ENV);
+
 const pause = (millis) => new Promise(resolve => setTimeout(resolve, millis));
 
 const isPlayableEvent = ({ type }) => [
