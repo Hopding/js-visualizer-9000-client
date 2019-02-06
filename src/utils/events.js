@@ -1,9 +1,9 @@
 /* @flow */
 import _ from 'lodash';
 
-const URL = process.env.NODE_ENV 
-  ? 'ws://localhost:8080'
-  : 'ws://js-visualizer-9000.herokuapp.com';
+const URL = process.env.NODE_ENV === 'production'
+  ? 'ws://js-visualizer-9000.herokuapp.com'
+  : 'ws://localhost:8080';
 
 export const fetchEventsForCode = (code: string) =>
   new Promise((resolve, reject) => {
