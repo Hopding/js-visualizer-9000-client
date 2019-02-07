@@ -47,13 +47,13 @@ class App extends Component {
     isAutoPlaying: false,
     currentStep: 'none', // 'none' | 'runTask' | 'runMicrotasks' | 'rerender',
     example: 'none',
-    // stats: {
-    //   promisesCreated: 0,
-    //   promisesResolved: 0,
-    //   functionCalls: 0,
-    //   tasksCreated: 0,
-    //   microtasksCreated: 0,
-    // }
+    isDrawerOpen: false,
+    visiblePanels: {
+      taskQueue: true,
+      microtaskQueue: true,
+      callStack: true,
+      eventLoop: true,
+    },
   };
 
   currEventIdx: number = 0;
@@ -63,6 +63,15 @@ class App extends Component {
   componentDidMount() {
     const code = localStorage.getItem('code') || '';
     this.setState({ code });
+  }
+
+  handleOpenDrawer = () => this.setState({ isDrawerOpen: true });
+  handleCloseDrawer = () => this.setState({ isDrawerOpen: false });
+
+  handleChangeVisiblePanel = (panel: string) => () => {
+    const { visiblePanels } = this.state;
+    const current = visiblePanels[panel];
+    this.setState({ visiblePanels: { ...visiblePanels, [panel]: !current } });
   }
 
   handleChangeExample = (evt: { target: { value: string } }) => {
@@ -345,7 +354,7 @@ class App extends Component {
   }
 
   render() {
-    const { tasks, microtasks, frames, markers, mode, example, code, isAutoPlaying, currentStep } = this.state;
+    const { tasks, microtasks, frames, markers, mode, example, code, isAutoPlaying, isDrawerOpen, visiblePanels, currentStep } = this.state;
 
     return (
       <AppRoot
@@ -356,9 +365,14 @@ class App extends Component {
         microtasks={microtasks}
         frames={frames}
         markers={markers}
+        visiblePanels={visiblePanels}
         isAutoPlaying={isAutoPlaying}
+        isDrawerOpen={isDrawerOpen}
         hasReachedEnd={this.hasReachedEnd()}
         currentStep={currentStep}
+        onChangeVisiblePanel={this.handleChangeVisiblePanel}
+        onCloseDrawer={this.handleCloseDrawer}
+        onOpenDrawer={this.handleOpenDrawer}
         onChangeExample={this.handleChangeExample}
         onChangeCode={this.handleChangeCode}
         onClickRun={this.handleClickRun}

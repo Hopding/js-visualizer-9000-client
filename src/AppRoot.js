@@ -16,6 +16,7 @@ import CallStack from './components/CallStack';
 import TaskQueue from './components/TaskQueue';
 import ExecutionModelStepper from './components/ExecutionModelStepper';
 import FabControls from './components/FabControls';
+import Drawer from './components/Drawer';
 
 // import StatsTable from './components/StatsTable';
 
@@ -69,9 +70,14 @@ const AppRoot = ({
   microtasks,
   frames,
   markers,
+  visiblePanels,
   isAutoPlaying,
+  isDrawerOpen,
   hasReachedEnd,
   currentStep,
+  onChangeVisiblePanel,
+  onCloseDrawer,
+  onOpenDrawer,
   onChangeExample,
   onChangeCode,
   onClickRun,
@@ -88,9 +94,19 @@ const AppRoot = ({
   microtasks: { name: string }[],
   frames: { name: string }[],
   markers: { start: number, end: number }[],
+  visiblePanels: {
+    taskQueue: boolean,
+    microtaskQueue: boolean,
+    callStack: boolean,
+    eventLoop: boolean,
+  },
   isAutoPlaying: boolean,
+  isDrawerOpen: boolean,
   hasReachedEnd: boolean,
   currentStep: 'evaluateScript' | 'runTasks' | 'runMicrotasks' | 'rerender',
+  onChangeVisiblePanel: string => void => any,
+  onCloseDrawer: void => any,
+  onOpenDrawer: void => any,
   onChangeExample: ({ target: { value: string } }) => any,
   onChangeCode: string => any,
   onClickRun: void => any,
@@ -103,8 +119,15 @@ const AppRoot = ({
   <div style={styles.container}>
     <MuiThemeProvider theme={theme}>
 
+      <Drawer
+        open={isDrawerOpen}
+        visiblePanels={visiblePanels}
+        onChange={onChangeVisiblePanel}
+        onClose={onCloseDrawer}
+      />
+
       <div style={styles.leftContainer}>
-        <Header />
+        <Header onClickLogo={onOpenDrawer} />
         <div style={styles.codeControlsContainer}>
           <ExampleSelector
             example={example}
@@ -127,12 +150,12 @@ const AppRoot = ({
 
       <div style={styles.rightContainer}>
         <div>
-          <TaskQueue title="Task Queue" tasks={tasks} />
-          <TaskQueue title="Microtask Queue" tasks={microtasks} />
+          {visiblePanels.taskQueue && <TaskQueue title="Task Queue" tasks={tasks} />}
+          {visiblePanels.microtaskQueue && <TaskQueue title="Microtask Queue" tasks={microtasks} />}
         </div>
         <div style={styles.bottomRightContainer}>
-          <CallStack frames={frames} />
-          <ExecutionModelStepper step={currentStep} />
+          {visiblePanels.callStack && <CallStack frames={frames} />}
+          {visiblePanels.eventLoop && <ExecutionModelStepper step={currentStep} />}
           {/*<StatsTable />*/}
         </div>
       </div>
