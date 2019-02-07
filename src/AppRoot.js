@@ -162,6 +162,7 @@ const AppRoot = ({
           />
           <RunOrEditButton
             mode={mode}
+            runDisabled={code.trim() === ''}
             onClickRun={onClickRun}
             onClickEdit={onClickEdit}
           />

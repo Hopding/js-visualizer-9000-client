@@ -60,11 +60,13 @@ const styles = theme => ({
 const RunOrEditButton = ({
   classes,
   mode,
+  runDisabled,
   onClickRun,
   onClickEdit,
 }: {|
   classes: any,
   mode: 'editing' | 'visualizing',
+  runDisabled: boolean,
   onClickRun: void => any,
   onClickEdit: void => any,
 |}) => (
@@ -76,7 +78,7 @@ const RunOrEditButton = ({
             color="primary"
             variant="contained"
             className={classes.button}
-            disabled={mode === 'running'}
+            disabled={runDisabled || mode === 'running'}
             onClick={onClickRun}
           >
             Run

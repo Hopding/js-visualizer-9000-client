@@ -94,6 +94,7 @@ const CodeEditor = ({
       highlightActiveLine={!locked}
       showLineNumbers
       editorProps={{ $blockScrolling: Infinity }}
+      focus
     />
   </Paper>
 );
