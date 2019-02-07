@@ -2,6 +2,8 @@
 import React from 'react';
 
 import Button from '@material-ui/core/Button';
+import Link from '@material-ui/core/Link';
+
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
@@ -24,42 +26,31 @@ const MicrotaskQueueDescription = ({
     <DialogTitle id="scroll-dialog-title">About the Microtask Queue</DialogTitle>
     <DialogContent>
       <DialogContentText>
-        Cras mattis consectetur purus sit amet fermentum. Cras justo odio, dapibus ac
-        facilisis in, egestas eget quam. Morbi leo risus, porta ac consectetur ac, vestibulum
-        at eros. Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Vivamus
-        sagittis lacus vel augue laoreet rutrum faucibus dolor auctor. Aenean lacinia bibendum
-        nulla sed consectetur. Praesent commodo cursus magna, vel scelerisque nisl consectetur
-        et. Donec sed odio dui. Donec ullamcorper nulla non metus auctor fringilla. Cras
-        mattis consectetur purus sit amet fermentum. Cras justo odio, dapibus ac facilisis in,
-        egestas eget quam. Morbi leo risus, porta ac consectetur ac, vestibulum at eros.
-        Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Vivamus sagittis
-        lacus vel augue laoreet rutrum faucibus dolor auctor. Aenean lacinia bibendum nulla
-        sed consectetur. Praesent commodo cursus magna, vel scelerisque nisl consectetur et.
-        Donec sed odio dui. Donec ullamcorper nulla non metus auctor fringilla. Cras mattis
-        consectetur purus sit amet fermentum. Cras justo odio, dapibus ac facilisis in,
-        egestas eget quam. Morbi leo risus, porta ac consectetur ac, vestibulum at eros.
-        Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Vivamus sagittis
-        lacus vel augue laoreet rutrum faucibus dolor auctor. Aenean lacinia bibendum nulla
-        sed consectetur. Praesent commodo cursus magna, vel scelerisque nisl consectetur et.
-        Donec sed odio dui. Donec ullamcorper nulla non metus auctor fringilla. Cras mattis
-        consectetur purus sit amet fermentum. Cras justo odio, dapibus ac facilisis in,
-        egestas eget quam. Morbi leo risus, porta ac consectetur ac, vestibulum at eros.
-        Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Vivamus sagittis
-        lacus vel augue laoreet rutrum faucibus dolor auctor. Aenean lacinia bibendum nulla
-        sed consectetur. Praesent commodo cursus magna, vel scelerisque nisl consectetur et.
-        Donec sed odio dui. Donec ullamcorper nulla non metus auctor fringilla. Cras mattis
-        consectetur purus sit amet fermentum. Cras justo odio, dapibus ac facilisis in,
-        egestas eget quam. Morbi leo risus, porta ac consectetur ac, vestibulum at eros.
-        Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Vivamus sagittis
-        lacus vel augue laoreet rutrum faucibus dolor auctor. Aenean lacinia bibendum nulla
-        sed consectetur. Praesent commodo cursus magna, vel scelerisque nisl consectetur et.
-        Donec sed odio dui. Donec ullamcorper nulla non metus auctor fringilla. Cras mattis
-        consectetur purus sit amet fermentum. Cras justo odio, dapibus ac facilisis in,
-        egestas eget quam. Morbi leo risus, porta ac consectetur ac, vestibulum at eros.
-        Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Vivamus sagittis
-        lacus vel augue laoreet rutrum faucibus dolor auctor. Aenean lacinia bibendum nulla
-        sed consectetur. Praesent commodo cursus magna, vel scelerisque nisl consectetur et.
-        Donec sed odio dui. Donec ullamcorper nulla non metus auctor fringilla.
+        The <b>Microtask Queue</b> is a FIFO queue of Microtasks that are processed by the Event Loop. The <b>Microtask Queue</b> is very similar to the Task Queue. It was added to JavaScript's execution model as part of ES6 in order to handle Promise resolution callbacks.
+      </DialogContentText>
+      <br />
+      <DialogContentText>
+        Microtasks are a lot like Tasks. They are synchronous blocks of code (think of them as Function objects) that have exclusive access to the Call Stack while running. And just like Tasks, Microtasks are able to enqueue additional Microtasks or Tasks to be run next.
+      </DialogContentText>
+      <br />
+      <DialogContentText>
+        The only difference between Microtasks and Tasks is where they are stored, and when they are processed.
+        <ul>
+          <li>Tasks are stored in Task Queues. But Microtasks are stored in the <b>Microtask Queue</b> (there's only one of these).</li>
+          <li>Tasks are processed in a loop, and rendering is performed in-between Tasks. But the <b>Microtask Queue</b> is emptied out after a Task completes, and before re-rendering occurs.</li>
+        </ul>
+      </DialogContentText>
+      <br />
+      <DialogContentText>
+        <Link
+          variant="body1"
+          color="secondary"
+          href="https://www.w3.org/TR/html52/webappapis.html#microtask-queue"
+          target="_blank"
+          rel="noreferrer"
+         >
+          Learn more from the HTML Scripting Spec
+         </Link>
       </DialogContentText>
     </DialogContent>
     <DialogActions>

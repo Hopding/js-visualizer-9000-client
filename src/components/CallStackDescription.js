@@ -35,7 +35,7 @@ const CallStackDescription = ({
       <br />
       <DialogContentText>
         <Link
-          variant="body2"
+          variant="body1"
           color="secondary"
           href="https://www.ecma-international.org/ecma-262/9.0/index.html#sec-execution-contexts"
           target="_blank"
