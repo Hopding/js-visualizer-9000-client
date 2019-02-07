@@ -56,12 +56,13 @@ const FrameDiv = posed(Frame)({
   enter: {
     y: 0,
     opacity: 1,
+    width: 165,
     transition: {
       y: { type: 'tween' },
     }
   },
   exit: {
-    y: 200,
+    y: -200,
     opacity: 0,
     height: 30,
     width: 165,
@@ -121,18 +122,27 @@ class CallStack extends React.Component<Props> {
               }}
               className="scroll-on-hover-y"
             >
-              <PoseGroup>
-                {frames.map(({ id, name }, idx) => (
-                  <FrameDiv
-                    key={id}
-                    classes={classes}
-                    name={name}
-                    style={{ backgroundColor: getPastelForIndex(idx) }}
-                  >
-                    {name}
-                  </FrameDiv>
-                ))}
-              </PoseGroup>
+              <div
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column-reverse',
+                  minHeight: contentHeight,
+                }}
+              >
+                {/*<PoseGroup preEnterPose="preEnter">*/}
+                <PoseGroup>
+                  {frames.map(({ id, name }, idx) => (
+                    <FrameDiv
+                      key={id}
+                      classes={classes}
+                      name={name}
+                      style={{ backgroundColor: getPastelForIndex(idx) }}
+                    >
+                      {name}
+                    </FrameDiv>
+                  ))}
+                </PoseGroup>
+              </div>
             </div>
           </div>
         </CardContent>

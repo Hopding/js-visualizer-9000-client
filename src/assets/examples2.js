@@ -43,11 +43,11 @@ Promise.resolve()
   value: `
 Promise.resolve()
   .then(function a() {
-    Promise.resolve().then(function c() {})
+    Promise.resolve().then(function c() {});
   })
   .then(function b() {
-    Promise.resolve().then(function d() {})
-  })
+    Promise.resolve().then(function d() {});
+  });
 `.trim(),
 },
 {

@@ -22,6 +22,7 @@ const styles = theme => ({
     // backgroundColor: '#ffffff',
     backgroundColor: theme.palette.primary.main,
     height: '100%',
+    display: 'flex',
   },
 });
 
@@ -67,7 +68,7 @@ const CodeEditor = ({
   <Paper className={classes.root} elevation={1}>
     <AceEditor
       style={{
-        width: 500,
+        maxWidth: 500,
         height: '100%',
         marginLeft: -15,
         marginRight: -15,

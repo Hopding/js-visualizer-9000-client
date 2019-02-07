@@ -37,7 +37,7 @@ function computePrimes(onPrime, startAt = 1) {
     if (isPrime(currNum)) onPrime(currNum);
   }
   setTimeout(() => {
-    computePrimes(onPrime, currNum + 1)
+    computePrimes(onPrime, currNum + 1);
   }, 0);
 }
 
@@ -62,7 +62,7 @@ function computePrimes(onPrime, startAt = 1) {
     if (isPrime(currNum)) onPrime(currNum);
   }
   Promise.resolve().then(() => {
-    computePrimes(onPrime, currNum + 1)
+    computePrimes(onPrime, currNum + 1);
   });
 }
 
