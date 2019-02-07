@@ -4,10 +4,13 @@ import React from 'react';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
+import Divider from '@material-ui/core/Divider';
 
 import { withStyles } from '@material-ui/core/styles';
 
-import EXAMPLES from '../assets/examples';
+import EXAMPLES1 from '../assets/examples1';
+import EXAMPLES2 from '../assets/examples2';
+import EXAMPLES3 from '../assets/examples3';
 
 const styles = theme => ({
   form: {
@@ -47,7 +50,16 @@ const ExampleSelector = ({
         <MenuItem value="none">
           <em>Choose an Example</em>
         </MenuItem>
-        {EXAMPLES.map(({ name, value }) => (
+        <Divider />
+        {EXAMPLES1.map(({ name, value }) => (
+          <MenuItem key={name} value={value}>{name}</MenuItem>
+        ))}
+        <Divider />
+        {EXAMPLES2.map(({ name, value }) => (
+          <MenuItem key={name} value={value}>{name}</MenuItem>
+        ))}
+        <Divider />
+        {EXAMPLES3.map(({ name, value }) => (
           <MenuItem key={name} value={value}>{name}</MenuItem>
         ))}
       </Select>

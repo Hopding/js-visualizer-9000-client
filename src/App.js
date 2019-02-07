@@ -375,7 +375,7 @@ class App extends Component {
 const AppWithSnackbar = withSnackbar(App);
 
 export default () => (
-  <SnackbarProvider maxSnack={6}>
+  <SnackbarProvider maxSnack={4}>
     <AppWithSnackbar />
   </SnackbarProvider>
 );

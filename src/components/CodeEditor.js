@@ -71,8 +71,8 @@ const CodeEditor = ({
         height: '100%',
         marginLeft: -15,
         marginRight: -15,
-        pointerEvents: locked ? 'none' : 'auto',
       }}
+      readOnly={locked}
       value={code}
       mode="javascript"
       theme="solarized_light"
