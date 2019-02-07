@@ -54,6 +54,10 @@ class App extends Component {
       callStack: true,
       eventLoop: true,
     },
+    showCallStackDescription: false,
+    showEventLoopDescription: false,
+    showTaskQueueDescription: false,
+    showMicrotaskQueueDescription: false,
   };
 
   currEventIdx: number = 0;
@@ -73,6 +77,18 @@ class App extends Component {
     const current = visiblePanels[panel];
     this.setState({ visiblePanels: { ...visiblePanels, [panel]: !current } });
   }
+
+  handleShowCallStackDescription = () => this.setState({ showCallStackDescription: true });
+  handleHideCallStackDescription = () => this.setState({ showCallStackDescription: false });
+
+  handleShowEventLoopDescription = () => this.setState({ showEventLoopDescription: true });
+  handleHideEventLoopDescription = () => this.setState({ showEventLoopDescription: false });
+
+  handleShowTaskQueueDescription = () => this.setState({ showTaskQueueDescription: true });
+  handleHideTaskQueueDescription = () => this.setState({ showTaskQueueDescription: false });
+
+  handleShowMicrotaskQueueDescription = () => this.setState({ showMicrotaskQueueDescription: true });
+  handleHideMicrotaskQueueDescription = () => this.setState({ showMicrotaskQueueDescription: false });
 
   handleChangeExample = (evt: { target: { value: string } }) => {
     const { value } = evt.target;
@@ -354,7 +370,7 @@ class App extends Component {
   }
 
   render() {
-    const { tasks, microtasks, frames, markers, mode, example, code, isAutoPlaying, isDrawerOpen, visiblePanels, currentStep } = this.state;
+    const { tasks, microtasks, frames, markers, mode, example, code, isAutoPlaying, isDrawerOpen, visiblePanels, currentStep, showCallStackDescription, showEventLoopDescription, showTaskQueueDescription, showMicrotaskQueueDescription } = this.state;
 
     return (
       <AppRoot
@@ -368,6 +384,10 @@ class App extends Component {
         visiblePanels={visiblePanels}
         isAutoPlaying={isAutoPlaying}
         isDrawerOpen={isDrawerOpen}
+        showCallStackDescription={showCallStackDescription}
+        showEventLoopDescription={showEventLoopDescription}
+        showTaskQueueDescription={showTaskQueueDescription}
+        showMicrotaskQueueDescription={showMicrotaskQueueDescription}
         hasReachedEnd={this.hasReachedEnd()}
         currentStep={currentStep}
         onChangeVisiblePanel={this.handleChangeVisiblePanel}
@@ -381,6 +401,14 @@ class App extends Component {
         onClickAutoStep={this.handleClickAutoStep}
         onClickStepBack={() => {}}
         onClickStep={this.handleClickStep}
+        onShowCallStackDescription={this.handleShowCallStackDescription}
+        onHideCallStackDescription={this.handleHideCallStackDescription}
+        onShowEventLoopDescription={this.handleShowEventLoopDescription}
+        onHideEventLoopDescription={this.handleHideEventLoopDescription}
+        onShowTaskQueueDescription={this.handleShowTaskQueueDescription}
+        onHideTaskQueueDescription={this.handleHideTaskQueueDescription}
+        onShowMicrotaskQueueDescription={this.handleShowMicrotaskQueueDescription}
+        onHideMicrotaskQueueDescription={this.handleHideMicrotaskQueueDescription}
       />
     );
   }

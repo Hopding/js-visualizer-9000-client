@@ -2,7 +2,6 @@
 import React from 'react';
 
 import Card from '@material-ui/core/Card';
-import CardHeader from '@material-ui/core/CardHeader';
 import CardContent from '@material-ui/core/CardContent';
 import Step from '@material-ui/core/Step';
 import StepLabel from '@material-ui/core/StepLabel';
@@ -14,6 +13,8 @@ import MuiThemeProvider from '@material-ui/core/styles/MuiThemeProvider';
 import { createMuiTheme } from '@material-ui/core/styles';
 import { withStyles } from '@material-ui/core/styles';
 import blue from '@material-ui/core/colors/blue';
+
+import CardHeaderWithAbout from './CardHeaderWithAbout';
 
 const blueTheme = createMuiTheme({
   palette: { primary: blue },
@@ -32,9 +33,6 @@ const styles = theme => ({
     flex: 1,
     maxWidth: 300,
     overflow: 'scroll',
-  },
-  header: {
-    padding: 0,
   },
   stepper: {
     backgroundColor: 'transparent',
@@ -66,13 +64,15 @@ const idxForStep = {
 const ExecutionModelStepper = ({
   step,
   classes,
+  onClickAbout,
 }: {|
   classes: any,
   step: 'none' | 'evaluateScript' | 'runTask' | 'runMicrotasks' | 'rerender',
+  onClickAbout: void => any,
 |}) => (
   <Card className={classes.card}>
     <CardContent>
-      <CardHeader title="Event Loop" className={classes.header} />
+      <CardHeaderWithAbout title="Event Loop" onClickAbout={onClickAbout} />
       <MuiThemeProvider theme={blueTheme}>
         <Stepper
           activeStep={idxForStep[step]}

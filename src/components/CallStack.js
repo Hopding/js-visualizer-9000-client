@@ -6,25 +6,22 @@ import { withStyles } from '@material-ui/core/styles';
 import RootRef from '@material-ui/core/RootRef';
 import Paper from '@material-ui/core/Paper';
 import Card from '@material-ui/core/Card';
-import CardHeader from '@material-ui/core/CardHeader';
 import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
 
 import { getPastelForIndex } from '../styles/colors';
 import '../styles/index.css';
+import CardHeaderWithAbout from './CardHeaderWithAbout';
 
 const styles = theme => ({
   card: {
     margin: theme.spacing.unit,
-    maxWidth: 225,
-    minWidth: 225,
+    maxWidth: 230,
+    minWidth: 230,
     flex: 1,
     display: 'flex',
     flexDirection: 'column',
     backgroundColor: theme.palette.primary.main,
-  },
-  header: {
-    padding: 0,
   },
   content: {
     width: 200,
@@ -33,7 +30,7 @@ const styles = theme => ({
     flexDirection: 'column',
   },
   frame: {
-    width: 160,
+    width: 165,
     height: 30,
     paddingTop: theme.spacing.unit * 1,
     paddingBottom: theme.spacing.unit * 1,
@@ -67,7 +64,7 @@ const FrameDiv = posed(Frame)({
     y: 200,
     opacity: 0,
     height: 30,
-    width: 160,
+    width: 165,
     transition: {
       y: { type: 'tween' },
     }
@@ -77,6 +74,7 @@ const FrameDiv = posed(Frame)({
 type Props = {
   classes: any,
   frames: { id: string, name: string }[],
+  onClickAbout: void => any,
 };
 
 class CallStack extends React.Component<Props> {
@@ -106,13 +104,13 @@ class CallStack extends React.Component<Props> {
   }
 
   render() {
-    const { classes, frames } = this.props;
+    const { classes, frames, onClickAbout } = this.props;
     const { contentWidth, contentHeight } = this.state;
 
     return (
       <Card className={classes.card}>
         <CardContent className={classes.content}>
-          <CardHeader title="Call Stack" className={classes.header} />
+          <CardHeaderWithAbout title="Call Stack" onClickAbout={onClickAbout} />
           <div style={{ display: 'flex', flexDirection: 'row', flex: 1 }}>
             <div ref={this.contentRef} style={{ flex: 1 }} />
             <div

@@ -6,12 +6,12 @@ import { withStyles } from '@material-ui/core/styles';
 import RootRef from '@material-ui/core/RootRef';
 import Paper from '@material-ui/core/Paper';
 import Card from '@material-ui/core/Card';
-import CardHeader from '@material-ui/core/CardHeader';
 import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
 
 import { pastels } from '../styles/colors';
 import '../styles/index.css';
+import CardHeaderWithAbout from './CardHeaderWithAbout';
 
 const styles = theme => ({
   card: {
@@ -20,9 +20,6 @@ const styles = theme => ({
     height: 120,
     backgroundColor: theme.palette.primary.main,
     display: 'flex',
-  },
-  header: {
-    padding: 0,
   },
   content: {
     display: 'flex',
@@ -82,6 +79,7 @@ type Props = {
   classes: any,
   title: string,
   tasks: { id: string, name: string }[],
+  onClickAbout: void => any,
 };
 
 class TaskQueue extends React.Component<Props> {
@@ -111,13 +109,13 @@ class TaskQueue extends React.Component<Props> {
   }
 
   render() {
-    const { classes, tasks, title } = this.props;
+    const { classes, tasks, title, onClickAbout } = this.props;
     const { contentWidth, contentHeight } = this.state;
 
     return (
       <Card className={classes.card}>
         <CardContent className={classes.content}>
-          <CardHeader title={title} className={classes.header} />
+          <CardHeaderWithAbout title={title} onClickAbout={onClickAbout} slideButtonLeft />
           <div style={{ display: 'flex', flexDirection: 'row', flex: 1 }}>
             <div ref={this.contentRef} style={{ flex: 1 }} />
             <div

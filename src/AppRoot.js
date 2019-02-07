@@ -17,8 +17,10 @@ import TaskQueue from './components/TaskQueue';
 import ExecutionModelStepper from './components/ExecutionModelStepper';
 import FabControls from './components/FabControls';
 import Drawer from './components/Drawer';
-
-// import StatsTable from './components/StatsTable';
+import CallStackDescription from './components/CallStackDescription';
+import EventLoopDescription from './components/EventLoopDescription';
+import TaskQueueDescription from './components/TaskQueueDescription';
+import MicrotaskQueueDescription from './components/MicrotaskQueueDescription';
 
 const theme = createMuiTheme({
   palette: {
@@ -73,6 +75,10 @@ const AppRoot = ({
   visiblePanels,
   isAutoPlaying,
   isDrawerOpen,
+  showCallStackDescription,
+  showEventLoopDescription,
+  showTaskQueueDescription,
+  showMicrotaskQueueDescription,
   hasReachedEnd,
   currentStep,
   onChangeVisiblePanel,
@@ -86,6 +92,14 @@ const AppRoot = ({
   onClickAutoStep,
   onClickStepBack,
   onClickStep,
+  onShowCallStackDescription,
+  onHideCallStackDescription,
+  onShowEventLoopDescription,
+  onHideEventLoopDescription,
+  onShowTaskQueueDescription,
+  onHideTaskQueueDescription,
+  onShowMicrotaskQueueDescription,
+  onHideMicrotaskQueueDescription,
 }: {|
   mode: 'editing' | 'running' | 'visualizing',
   example: string,
@@ -102,6 +116,10 @@ const AppRoot = ({
   },
   isAutoPlaying: boolean,
   isDrawerOpen: boolean,
+  showCallStackDescription: boolean,
+  showEventLoopDescription: boolean,
+  showTaskQueueDescription: boolean,
+  showMicrotaskQueueDescription: boolean,
   hasReachedEnd: boolean,
   currentStep: 'evaluateScript' | 'runTasks' | 'runMicrotasks' | 'rerender',
   onChangeVisiblePanel: string => void => any,
@@ -115,6 +133,14 @@ const AppRoot = ({
   onClickAutoStep: void => any,
   onClickStepBack: void => any,
   onClickStep: void => any,
+  onShowCallStackDescription: void => any,
+  onHideCallStackDescription: void => any,
+  onShowEventLoopDescription: void => any,
+  onHideEventLoopDescription: void => any,
+  onShowTaskQueueDescription: void => any,
+  onHideTaskQueueDescription: void => any,
+  onShowMicrotaskQueueDescription: void => any,
+  onHideMicrotaskQueueDescription: void => any,
 |}) => (
   <div style={styles.container}>
     <MuiThemeProvider theme={theme}>
@@ -150,13 +176,20 @@ const AppRoot = ({
 
       <div style={styles.rightContainer}>
         <div>
-          {visiblePanels.taskQueue && <TaskQueue title="Task Queue" tasks={tasks} />}
-          {visiblePanels.microtaskQueue && <TaskQueue title="Microtask Queue" tasks={microtasks} />}
+          {visiblePanels.taskQueue && (
+            <TaskQueue title="Task Queue" tasks={tasks} onClickAbout={onShowTaskQueueDescription} />
+          )}
+          {visiblePanels.microtaskQueue && (
+            <TaskQueue title="Microtask Queue" tasks={microtasks} onClickAbout={onShowMicrotaskQueueDescription} />
+          )}
         </div>
         <div style={styles.bottomRightContainer}>
-          {visiblePanels.callStack && <CallStack frames={frames} />}
-          {visiblePanels.eventLoop && <ExecutionModelStepper step={currentStep} />}
-          {/*<StatsTable />*/}
+          {visiblePanels.callStack && (
+            <CallStack frames={frames} onClickAbout={onShowCallStackDescription} />
+          )}
+          {visiblePanels.eventLoop && (
+            <ExecutionModelStepper step={currentStep} onClickAbout={onShowEventLoopDescription}/>
+          )}
         </div>
       </div>
 
@@ -168,6 +201,26 @@ const AppRoot = ({
         onClickAutoStep={onClickAutoStep}
         onClickStepBack={onClickStepBack}
         onClickStep={onClickStep}
+      />
+
+      <CallStackDescription
+        open={showCallStackDescription}
+        onClose={onHideCallStackDescription}
+      />
+
+      <EventLoopDescription
+        open={showEventLoopDescription}
+        onClose={onHideEventLoopDescription}
+      />
+
+      <TaskQueueDescription
+        open={showTaskQueueDescription}
+        onClose={onHideTaskQueueDescription}
+      />
+
+      <MicrotaskQueueDescription
+        open={showMicrotaskQueueDescription}
+        onClose={onHideMicrotaskQueueDescription}
       />
 
     </MuiThemeProvider>
