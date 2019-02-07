@@ -2,6 +2,8 @@
 import React from 'react';
 
 import Button from '@material-ui/core/Button';
+import Link from '@material-ui/core/Link';
+
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
@@ -24,42 +26,35 @@ const TaskQueueDescription = ({
     <DialogTitle id="scroll-dialog-title">About the Task Queue</DialogTitle>
     <DialogContent>
       <DialogContentText>
-        Cras mattis consectetur purus sit amet fermentum. Cras justo odio, dapibus ac
-        facilisis in, egestas eget quam. Morbi leo risus, porta ac consectetur ac, vestibulum
-        at eros. Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Vivamus
-        sagittis lacus vel augue laoreet rutrum faucibus dolor auctor. Aenean lacinia bibendum
-        nulla sed consectetur. Praesent commodo cursus magna, vel scelerisque nisl consectetur
-        et. Donec sed odio dui. Donec ullamcorper nulla non metus auctor fringilla. Cras
-        mattis consectetur purus sit amet fermentum. Cras justo odio, dapibus ac facilisis in,
-        egestas eget quam. Morbi leo risus, porta ac consectetur ac, vestibulum at eros.
-        Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Vivamus sagittis
-        lacus vel augue laoreet rutrum faucibus dolor auctor. Aenean lacinia bibendum nulla
-        sed consectetur. Praesent commodo cursus magna, vel scelerisque nisl consectetur et.
-        Donec sed odio dui. Donec ullamcorper nulla non metus auctor fringilla. Cras mattis
-        consectetur purus sit amet fermentum. Cras justo odio, dapibus ac facilisis in,
-        egestas eget quam. Morbi leo risus, porta ac consectetur ac, vestibulum at eros.
-        Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Vivamus sagittis
-        lacus vel augue laoreet rutrum faucibus dolor auctor. Aenean lacinia bibendum nulla
-        sed consectetur. Praesent commodo cursus magna, vel scelerisque nisl consectetur et.
-        Donec sed odio dui. Donec ullamcorper nulla non metus auctor fringilla. Cras mattis
-        consectetur purus sit amet fermentum. Cras justo odio, dapibus ac facilisis in,
-        egestas eget quam. Morbi leo risus, porta ac consectetur ac, vestibulum at eros.
-        Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Vivamus sagittis
-        lacus vel augue laoreet rutrum faucibus dolor auctor. Aenean lacinia bibendum nulla
-        sed consectetur. Praesent commodo cursus magna, vel scelerisque nisl consectetur et.
-        Donec sed odio dui. Donec ullamcorper nulla non metus auctor fringilla. Cras mattis
-        consectetur purus sit amet fermentum. Cras justo odio, dapibus ac facilisis in,
-        egestas eget quam. Morbi leo risus, porta ac consectetur ac, vestibulum at eros.
-        Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Vivamus sagittis
-        lacus vel augue laoreet rutrum faucibus dolor auctor. Aenean lacinia bibendum nulla
-        sed consectetur. Praesent commodo cursus magna, vel scelerisque nisl consectetur et.
-        Donec sed odio dui. Donec ullamcorper nulla non metus auctor fringilla. Cras mattis
-        consectetur purus sit amet fermentum. Cras justo odio, dapibus ac facilisis in,
-        egestas eget quam. Morbi leo risus, porta ac consectetur ac, vestibulum at eros.
-        Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Vivamus sagittis
-        lacus vel augue laoreet rutrum faucibus dolor auctor. Aenean lacinia bibendum nulla
-        sed consectetur. Praesent commodo cursus magna, vel scelerisque nisl consectetur et.
-        Donec sed odio dui. Donec ullamcorper nulla non metus auctor fringilla.
+        If the Call Stack keeps track of the functions that are executing right now, then the <b>Task Queue</b> keeps track of functions that are going to be executed in the future.
+      </DialogContentText>
+      <br />
+      <DialogContentText>
+        The <b>Task Queue</b> is a FIFO queue of tasks that are processed by the Event Loop. Tasks are synchronous blocks of code. You can think of them as Function objects.
+      </DialogContentText>
+      <br />
+      <DialogContentText>
+        The Event Loop works by continuously looping through the <b>Task Queue</b> and processing the tasks it contains one by one. A single iteration of the Event Loop is called a tick.
+      </DialogContentText>
+      <br />
+      <DialogContentText>
+        To process a task, the Event Loop invokes the Function associated with it. While a task is running, it has exclusive access to the Call Stack. The Event Loop waits to process the next task until the current task is finished, and the Call Stack is empty.
+      </DialogContentText>
+      <br />
+      <DialogContentText>
+        While a task is running, it can enqueue other tasks to be processed in subsequent ticks of the Event Loop. There are several ways to do this, the simplest of which is <code>setTimeout(taskFn, 0)</code>. Tasks can also come from external sources such as DOM and network events.
+      </DialogContentText>
+      <br />
+      <DialogContentText>
+        <Link
+          variant="body2"
+          color="secondary"
+          href="https://www.w3.org/TR/html52/webappapis.html#task-queues"
+          target="_blank"
+          rel="noreferrer"
+         >
+          Learn more from the HTML Scripting Spec
+         </Link>
       </DialogContentText>
     </DialogContent>
     <DialogActions>
