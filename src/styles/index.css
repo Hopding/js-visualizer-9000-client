@@ -18,9 +18,3 @@
   flex: 1;
   display: auto;
 }
-
-@media only screen and (max-width: 1200px) {
-  .hide-when-screen-shrinks {
-    display: none;
-  }
-}

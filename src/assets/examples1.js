@@ -3,9 +3,13 @@ export default [
   name: 'Call Stack',
   value:`
 function fifth() { }
+
 function fourth() { fifth() }
+
 function third() { fourth() }
+
 function second() { third() }
+
 function first() { second() }
 
 first();
@@ -15,9 +19,13 @@ first();
   name: 'Task Queue',
   value: `
 setTimeout(function a() {}, 1000);
+
 setTimeout(function b() {}, 500);
+
 setTimeout(function c() {}, 0);
+
 function d() {}
+
 d();
 `.trim(),
 },

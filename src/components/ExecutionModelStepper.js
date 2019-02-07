@@ -8,6 +8,11 @@ import Step from '@material-ui/core/Step';
 import StepLabel from '@material-ui/core/StepLabel';
 import StepContent from '@material-ui/core/StepContent';
 
+
+import Card from '@material-ui/core/Card';
+import CardHeader from '@material-ui/core/CardHeader';
+import CardContent from '@material-ui/core/CardContent';
+
 import MuiThemeProvider from '@material-ui/core/styles/MuiThemeProvider';
 import { createMuiTheme } from '@material-ui/core/styles';
 import { withStyles } from '@material-ui/core/styles';
@@ -22,13 +27,17 @@ const blueTheme = createMuiTheme({
 });
 
 const styles = theme => ({
-  root: {
-    paddingTop: theme.spacing.unit * 1,
-    paddingBottom: theme.spacing.unit * 1,
+  card: {
     margin: theme.spacing.unit,
+    display: 'flex',
+    flexDirection: 'column',
     backgroundColor: theme.palette.primary.main,
     flex: 1,
+    maxWidth: 300,
     overflow: 'scroll',
+  },
+  header: {
+    padding: 0,
   },
   stepper: {
     backgroundColor: 'transparent',
@@ -64,30 +73,33 @@ const ExecutionModelStepper = ({
   classes: any,
   step: 'none' | 'evaluateScript' | 'runTask' | 'runMicrotasks' | 'rerender',
 |}) => (
-  <Paper className={classes.root} elevation={1}>
-    <MuiThemeProvider theme={blueTheme}>
-      <Stepper
-        activeStep={idxForStep[step]}
-        orientation="vertical"
-        className={classes.stepper}
-      >
-        {stepTitles.map((title, idx) => (
-          <Step key={title} completed={idx < idxForStep[step]}>
-            <StepLabel>
-              <Typography
-                style={{ fontWeight: idx === idxForStep[step] ? 'bold' : 'normal' }}
-              >
-                {title}
-              </Typography>
-            </StepLabel>
-            <StepContent>
-              <Typography>{stepDescriptions[idx]}</Typography>
-            </StepContent>
-          </Step>
-        ))}
-      </Stepper>
-    </MuiThemeProvider>
-  </Paper>
+  <Card className={classes.card}>
+    <CardContent>
+      <CardHeader title="Event Loop" className={classes.header} />
+      <MuiThemeProvider theme={blueTheme}>
+        <Stepper
+          activeStep={idxForStep[step]}
+          orientation="vertical"
+          className={classes.stepper}
+        >
+          {stepTitles.map((title, idx) => (
+            <Step key={title} completed={idx < idxForStep[step]}>
+              <StepLabel>
+                <Typography
+                  style={{ fontWeight: idx === idxForStep[step] ? 'bold' : 'normal' }}
+                >
+                  {title}
+                </Typography>
+              </StepLabel>
+              <StepContent>
+                <Typography>{stepDescriptions[idx]}</Typography>
+              </StepContent>
+            </Step>
+          ))}
+        </Stepper>
+      </MuiThemeProvider>
+    </CardContent>
+  </Card>
 );
 
 export default withStyles(styles)(ExecutionModelStepper);

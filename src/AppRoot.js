@@ -133,7 +133,6 @@ const AppRoot = ({
         <div style={styles.bottomRightContainer}>
           <CallStack frames={frames} />
           <ExecutionModelStepper step={currentStep} />
-          <div className="hide-when-screen-shrinks" />
           {/*<StatsTable />*/}
         </div>
       </div>
