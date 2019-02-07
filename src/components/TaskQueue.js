@@ -1,6 +1,7 @@
 /* @flow */
 import React from 'react';
 import posed, { PoseGroup } from 'react-pose'
+import Measure from 'react-measure';
 
 import { withStyles } from '@material-ui/core/styles';
 import RootRef from '@material-ui/core/RootRef';
@@ -34,6 +35,7 @@ const styles = theme => ({
     margin: theme.spacing.unit,
     display: 'inline-block',
     textAlign: 'center',
+    minWidth: 125,
   },
 });
 
@@ -83,45 +85,28 @@ type Props = {
 };
 
 class TaskQueue extends React.Component<Props> {
-  state = { contentWidth: undefined, contentHeight: undefined };
+  state = { width: undefined, height: undefined };
 
-  contentRef = React.createRef();
-
-  componentDidMount() {
-    this.handleResize();
-    window.addEventListener('resize', this.handleResize);
-  }
-
-  componentWillUnmount() {
-    window.removeEventListener('resize', this.handleResize);
-  }
-
-  handleResize = () => {
-    const { width, height } = this.getContentDims();
-    this.setState({ contentWidth: width, contentHeight: height });
-  }
-
-  getContentDims = () => {
-    const contentDiv = this.contentRef.current;
-    return contentDiv
-      ? { width: contentDiv.clientWidth, height: contentDiv.clientHeight }
-      : { width: undefined, height: undefined };
+  handleResize = ({ bounds: { width, height } }) => {
+    this.setState({ width, height });
   }
 
   render() {
     const { classes, tasks, title, onClickAbout } = this.props;
-    const { contentWidth, contentHeight } = this.state;
+    const { width, height } = this.state;
 
     return (
       <Card className={classes.card}>
         <CardContent className={classes.content}>
           <CardHeaderWithAbout title={title} onClickAbout={onClickAbout} slideButtonLeft />
           <div style={{ display: 'flex', flexDirection: 'row', flex: 1 }}>
-            <div ref={this.contentRef} style={{ flex: 1 }} />
+            <Measure bounds onResize={this.handleResize}>
+              {({ measureRef: ref }) => <div ref={ref} style={{ flex: 1 }} />}
+            </Measure>
             <div
               style={{
-                width: contentWidth,
-                height: contentHeight,
+                width,
+                height,
                 position: 'absolute',
                 display: 'flex',
                 flexWrap: 'nowrap',

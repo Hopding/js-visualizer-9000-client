@@ -38,7 +38,7 @@ const Drawer = ({
   onClose: void => any,
 |}) => (
   <MUIDrawer open={open} onClose={onClose}>
-    <FormControl component="visiblePanels" className={classes.formControl}>
+    <FormControl component="div" className={classes.formControl}>
       <FormLabel component="legend">Visible Panels</FormLabel>
       <FormGroup>
         <FormControlLabel
