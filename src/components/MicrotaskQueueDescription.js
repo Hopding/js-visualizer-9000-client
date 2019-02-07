@@ -1,6 +1,8 @@
 /* @flow */
 import React from 'react';
 
+import { withStyles } from '@material-ui/core/styles';
+
 import Button from '@material-ui/core/Button';
 import Link from '@material-ui/core/Link';
 
@@ -10,10 +12,23 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 
+const styles = theme => ({
+  actions: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  link: {
+    marginLeft: 15,
+  },
+});
+
 const MicrotaskQueueDescription = ({
+  classes,
   open,
   onClose,
 }: {|
+  classes: any,
   open: boolean,
   onClose: void => any,
 |}) => (
@@ -40,20 +55,18 @@ const MicrotaskQueueDescription = ({
           <li>Tasks are processed in a loop, and rendering is performed in-between Tasks. But the <b>Microtask Queue</b> is emptied out after a Task completes, and before re-rendering occurs.</li>
         </ul>
       </DialogContentText>
-      <br />
-      <DialogContentText>
-        <Link
-          variant="body1"
-          color="secondary"
-          href="https://www.w3.org/TR/html52/webappapis.html#microtask-queue"
-          target="_blank"
-          rel="noreferrer"
-         >
-          Learn more from the HTML Scripting Spec
-         </Link>
-      </DialogContentText>
     </DialogContent>
-    <DialogActions>
+    <DialogActions className={classes.actions}>
+      <Link
+        variant="body1"
+        color="secondary"
+        href="https://www.w3.org/TR/html52/webappapis.html#microtask-queue"
+        target="_blank"
+        rel="noreferrer"
+        className={classes.link}
+       >
+        Learn more from the HTML Scripting Spec
+       </Link>
       <Button onClick={onClose} color="secondary">
         Ok
       </Button>
@@ -61,4 +74,4 @@ const MicrotaskQueueDescription = ({
   </Dialog>
 );
 
-export default MicrotaskQueueDescription;
+export default withStyles(styles)(MicrotaskQueueDescription);

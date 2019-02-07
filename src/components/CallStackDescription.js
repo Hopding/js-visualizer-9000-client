@@ -1,6 +1,8 @@
 /* @flow */
 import React from 'react';
 
+import { withStyles } from '@material-ui/core/styles';
+
 import Button from '@material-ui/core/Button';
 import Link from '@material-ui/core/Link';
 
@@ -10,10 +12,23 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 
+const styles = theme => ({
+  actions: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  link: {
+    marginLeft: 15,
+  },
+});
+
 const CallStackDescription = ({
+  classes,
   open,
   onClose,
 }: {|
+  classes: any,
   open: boolean,
   onClose: void => any,
 |}) => (
@@ -32,20 +47,18 @@ const CallStackDescription = ({
       <DialogContentText>
         When a JavaScript program first starts executing, the <b>Call Stack</b> is empty. When the first function call is made, a new frame is pushed onto the top of the <b>Call Stack</b>. When that function returns, its frame is popped off of the <b>Call Stack</b>.
       </DialogContentText>
-      <br />
-      <DialogContentText>
-        <Link
-          variant="body1"
-          color="secondary"
-          href="https://www.ecma-international.org/ecma-262/9.0/index.html#sec-execution-contexts"
-          target="_blank"
-          rel="noreferrer"
-         >
-          Learn more from the JavaScript Spec
-         </Link>
-      </DialogContentText>
     </DialogContent>
-    <DialogActions>
+    <DialogActions className={classes.actions}>
+      <Link
+        variant="body1"
+        color="secondary"
+        href="https://www.ecma-international.org/ecma-262/9.0/index.html#sec-execution-contexts"
+        target="_blank"
+        rel="noreferrer"
+        className={classes.link}
+       >
+        Learn more from the JavaScript Spec
+       </Link>
       <Button onClick={onClose} color="secondary">
         Ok
       </Button>
@@ -53,4 +66,4 @@ const CallStackDescription = ({
   </Dialog>
 );
 
-export default CallStackDescription;
+export default withStyles(styles)(CallStackDescription);

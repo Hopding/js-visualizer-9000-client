@@ -1,17 +1,50 @@
 /* @flow */
 import React from 'react';
 
+import { withStyles } from '@material-ui/core/styles';
+
 import Button from '@material-ui/core/Button';
+import Link from '@material-ui/core/Link';
+
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 
+const eventLoopPsuedocode = `
+while (EventLoop.waitForTask()) {
+  const taskQueue = EventLoop.selectTaskQueue();
+  if (taskQueue.hasNextTask()) {
+    taskQueue.processNextTask();
+  }
+
+  const microtaskQueue = EventLoop.microTaskQueue;
+  while (microtaskQueue.hasNextMicrotask()) {
+    microtaskQueue.processNextMicrotask();
+  }
+
+  rerender();
+}
+`.trim();
+
+const styles = theme => ({
+  actions: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  link: {
+    marginLeft: 15,
+  },
+});
+
 const EventLoopDescription = ({
+  classes,
   open,
   onClose,
 }: {|
+  classes: any,
   open: boolean,
   onClose: void => any,
 |}) => (
@@ -24,45 +57,35 @@ const EventLoopDescription = ({
     <DialogTitle id="scroll-dialog-title">About the Event Loop</DialogTitle>
     <DialogContent>
       <DialogContentText>
-        Cras mattis consectetur purus sit amet fermentum. Cras justo odio, dapibus ac
-        facilisis in, egestas eget quam. Morbi leo risus, porta ac consectetur ac, vestibulum
-        at eros. Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Vivamus
-        sagittis lacus vel augue laoreet rutrum faucibus dolor auctor. Aenean lacinia bibendum
-        nulla sed consectetur. Praesent commodo cursus magna, vel scelerisque nisl consectetur
-        et. Donec sed odio dui. Donec ullamcorper nulla non metus auctor fringilla. Cras
-        mattis consectetur purus sit amet fermentum. Cras justo odio, dapibus ac facilisis in,
-        egestas eget quam. Morbi leo risus, porta ac consectetur ac, vestibulum at eros.
-        Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Vivamus sagittis
-        lacus vel augue laoreet rutrum faucibus dolor auctor. Aenean lacinia bibendum nulla
-        sed consectetur. Praesent commodo cursus magna, vel scelerisque nisl consectetur et.
-        Donec sed odio dui. Donec ullamcorper nulla non metus auctor fringilla. Cras mattis
-        consectetur purus sit amet fermentum. Cras justo odio, dapibus ac facilisis in,
-        egestas eget quam. Morbi leo risus, porta ac consectetur ac, vestibulum at eros.
-        Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Vivamus sagittis
-        lacus vel augue laoreet rutrum faucibus dolor auctor. Aenean lacinia bibendum nulla
-        sed consectetur. Praesent commodo cursus magna, vel scelerisque nisl consectetur et.
-        Donec sed odio dui. Donec ullamcorper nulla non metus auctor fringilla. Cras mattis
-        consectetur purus sit amet fermentum. Cras justo odio, dapibus ac facilisis in,
-        egestas eget quam. Morbi leo risus, porta ac consectetur ac, vestibulum at eros.
-        Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Vivamus sagittis
-        lacus vel augue laoreet rutrum faucibus dolor auctor. Aenean lacinia bibendum nulla
-        sed consectetur. Praesent commodo cursus magna, vel scelerisque nisl consectetur et.
-        Donec sed odio dui. Donec ullamcorper nulla non metus auctor fringilla. Cras mattis
-        consectetur purus sit amet fermentum. Cras justo odio, dapibus ac facilisis in,
-        egestas eget quam. Morbi leo risus, porta ac consectetur ac, vestibulum at eros.
-        Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Vivamus sagittis
-        lacus vel augue laoreet rutrum faucibus dolor auctor. Aenean lacinia bibendum nulla
-        sed consectetur. Praesent commodo cursus magna, vel scelerisque nisl consectetur et.
-        Donec sed odio dui. Donec ullamcorper nulla non metus auctor fringilla. Cras mattis
-        consectetur purus sit amet fermentum. Cras justo odio, dapibus ac facilisis in,
-        egestas eget quam. Morbi leo risus, porta ac consectetur ac, vestibulum at eros.
-        Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Vivamus sagittis
-        lacus vel augue laoreet rutrum faucibus dolor auctor. Aenean lacinia bibendum nulla
-        sed consectetur. Praesent commodo cursus magna, vel scelerisque nisl consectetur et.
-        Donec sed odio dui. Donec ullamcorper nulla non metus auctor fringilla.
+        The Event Loop is a looping algorithm that processes the Tasks/Microtasks in the Task Queue and Microtask Queue. It handles selecting the next Task/Microtask to be run and placing it in the Call Stack for execution.
+      </DialogContentText>
+      <br />
+      <DialogContentText>
+        The Event Loop algorithm consists of four key steps:
+        <ol>
+          <li><b>Evaluate Script:</b> Synchronously execute the script as though it were a function body.</li>
+          <li><b>Run a Task:</b> Select the oldest Task from the Task Queue. Run it until the Call Stack is empty.</li>
+          <li><b>Run all Microtasks:</b> Select the oldest Microtask from the Microtask Queue. Run it until the Call Stack is empty. Repeat until the Microtask Queue is empty.</li>
+          <li><b>Rerender the UI:</b> Rerender the UI. Then, return to step 2. (This step only applies to browsers, not NodeJS).</li>
+        </ol>
+      </DialogContentText>
+      <br />
+      <DialogContentText>
+        Let's model the Event Loop with some JavaScript psuedocode:
+        <pre style={{ fontSize: 14, marginLeft: 16 }}><code>{eventLoopPsuedocode}</code></pre>
       </DialogContentText>
     </DialogContent>
-    <DialogActions>
+    <DialogActions className={classes.actions}>
+      <Link
+        variant="body1"
+        color="secondary"
+        href="https://www.w3.org/TR/html52/webappapis.html#event-loops-processing-model"
+        target="_blank"
+        rel="noreferrer"
+        className={classes.link}
+       >
+        Learn more from the HTML Scripting Spec
+       </Link>
       <Button onClick={onClose} color="secondary">
         Ok
       </Button>
@@ -70,4 +93,4 @@ const EventLoopDescription = ({
   </Dialog>
 );
 
-export default EventLoopDescription;
+export default withStyles(styles)(EventLoopDescription);

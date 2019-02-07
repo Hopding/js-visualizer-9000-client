@@ -1,6 +1,8 @@
 /* @flow */
 import React from 'react';
 
+import { withStyles } from '@material-ui/core/styles';
+
 import Button from '@material-ui/core/Button';
 import Link from '@material-ui/core/Link';
 
@@ -10,10 +12,23 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 
+const styles = theme => ({
+  actions: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  link: {
+    marginLeft: 15,
+  },
+});
+
 const TaskQueueDescription = ({
+  classes,
   open,
   onClose,
 }: {|
+  classes: any,
   open: boolean,
   onClose: void => any,
 |}) => (
@@ -44,20 +59,18 @@ const TaskQueueDescription = ({
       <DialogContentText>
         While a Task is running, it can enqueue other Tasks to be processed in subsequent ticks of the Event Loop. There are several ways to do this, the simplest of which is <code>setTimeout(taskFn, 0)</code>. Tasks can also come from external sources such as DOM and network events.
       </DialogContentText>
-      <br />
-      <DialogContentText>
-        <Link
-          variant="body1"
-          color="secondary"
-          href="https://www.w3.org/TR/html52/webappapis.html#task-queues"
-          target="_blank"
-          rel="noreferrer"
-         >
-          Learn more from the HTML Scripting Spec
-         </Link>
-      </DialogContentText>
     </DialogContent>
-    <DialogActions>
+    <DialogActions className={classes.actions}>
+      <Link
+        variant="body1"
+        color="secondary"
+        href="https://www.w3.org/TR/html52/webappapis.html#task-queues"
+        target="_blank"
+        rel="noreferrer"
+        className={classes.link}
+       >
+        Learn more from the HTML Scripting Spec
+       </Link>
       <Button onClick={onClose} color="secondary">
         Ok
       </Button>
@@ -65,4 +78,4 @@ const TaskQueueDescription = ({
   </Dialog>
 );
 
-export default TaskQueueDescription;
+export default withStyles(styles)(TaskQueueDescription);
