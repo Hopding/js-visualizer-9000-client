@@ -32,7 +32,7 @@ const styles = theme => ({
     backgroundColor: theme.palette.primary.main,
     flex: 1,
     maxWidth: 300,
-    overflow: 'scroll',
+    overflowY: 'auto',
   },
   stepper: {
     backgroundColor: 'transparent',
