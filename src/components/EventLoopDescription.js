@@ -63,7 +63,7 @@ const EventLoopDescription = ({
       <DialogContentText>
         The Event Loop algorithm consists of four key steps:
         <ol>
-          <li><b>Evaluate Script:</b> Synchronously execute the script as though it were a function body.</li>
+          <li><b>Evaluate Script:</b> Synchronously execute the script as though it were a function body. Run until the Call Stack is empty.</li>
           <li><b>Run a Task:</b> Select the oldest Task from the Task Queue. Run it until the Call Stack is empty.</li>
           <li><b>Run all Microtasks:</b> Select the oldest Microtask from the Microtask Queue. Run it until the Call Stack is empty. Repeat until the Microtask Queue is empty.</li>
           <li><b>Rerender the UI:</b> Rerender the UI. Then, return to step 2. (This step only applies to browsers, not NodeJS).</li>
