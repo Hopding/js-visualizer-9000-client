@@ -5,6 +5,7 @@ import { withStyles } from '@material-ui/core/styles';
 
 import Button from '@material-ui/core/Button';
 import Link from '@material-ui/core/Link';
+import Divider from '@material-ui/core/Divider';
 
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -57,22 +58,51 @@ const EventLoopDescription = ({
     <DialogTitle id="scroll-dialog-title">About the Event Loop</DialogTitle>
     <DialogContent>
       <DialogContentText>
-        The Event Loop is a looping algorithm that processes the Tasks/Microtasks in the Task Queue and Microtask Queue. It handles selecting the next Task/Microtask to be run and placing it in the Call Stack for execution.
+        <b>TL;DR</b>{' '}
+        <em>
+          The <b>Event Loop</b> processes Tasks and Microtasks. It places them
+          into the Call Stack for execution one at a time. It also controls when
+          rerendering occurs.
+        </em>
+      </DialogContentText>
+      <br />
+      <Divider />
+      <br />
+      <DialogContentText>
+        The Event Loop is a looping algorithm that processes the
+        Tasks/Microtasks in the Task Queue and Microtask Queue. It handles
+        selecting the next Task/Microtask to be run and placing it in the Call
+        Stack for execution.
       </DialogContentText>
       <br />
       <DialogContentText>
         The Event Loop algorithm consists of four key steps:
         <ol>
-          <li><b>Evaluate Script:</b> Synchronously execute the script as though it were a function body. Run until the Call Stack is empty.</li>
-          <li><b>Run a Task:</b> Select the oldest Task from the Task Queue. Run it until the Call Stack is empty.</li>
-          <li><b>Run all Microtasks:</b> Select the oldest Microtask from the Microtask Queue. Run it until the Call Stack is empty. Repeat until the Microtask Queue is empty.</li>
-          <li><b>Rerender the UI:</b> Rerender the UI. Then, return to step 2. (This step only applies to browsers, not NodeJS).</li>
+          <li>
+            <b>Evaluate Script:</b> Synchronously execute the script as though
+            it were a function body. Run until the Call Stack is empty.
+          </li>
+          <li>
+            <b>Run a Task:</b> Select the oldest Task from the Task Queue. Run
+            it until the Call Stack is empty.
+          </li>
+          <li>
+            <b>Run all Microtasks:</b> Select the oldest Microtask from the
+            Microtask Queue. Run it until the Call Stack is empty. Repeat until
+            the Microtask Queue is empty.
+          </li>
+          <li>
+            <b>Rerender the UI:</b> Rerender the UI. Then, return to step 2.
+            (This step only applies to browsers, not NodeJS).
+          </li>
         </ol>
       </DialogContentText>
       <br />
       <DialogContentText>
         Let's model the Event Loop with some JavaScript psuedocode:
-        <pre style={{ fontSize: 14, marginLeft: 16 }}><code>{eventLoopPsuedocode}</code></pre>
+        <pre style={{ fontSize: 14, marginLeft: 16 }}>
+          <code>{eventLoopPsuedocode}</code>
+        </pre>
       </DialogContentText>
     </DialogContent>
     <DialogActions className={classes.actions}>
@@ -83,9 +113,9 @@ const EventLoopDescription = ({
         target="_blank"
         rel="noreferrer"
         className={classes.link}
-       >
+      >
         Learn more from the HTML Scripting Spec
-       </Link>
+      </Link>
       <Button onClick={onClose} color="secondary">
         Ok
       </Button>

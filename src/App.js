@@ -14,22 +14,24 @@ import CloseIcon from '@material-ui/icons/Close';
 
 import AppRoot from './AppRoot';
 import { fetchEventsForCode } from './utils/events';
+import DEFAULT_CODE from './assets/defaultCode';
 
-const pause = (millis) => new Promise(resolve => setTimeout(resolve, millis));
+const pause = millis => new Promise(resolve => setTimeout(resolve, millis));
 
-const isPlayableEvent = ({ type }) => [
-  'EnterFunction',
-  'ExitFunction',
-  'EnqueueMicrotask',
-  'DequeueMicrotask',
-  'InitTimeout',
-  'BeforeTimeout',
-  'Rerender',
-  'ConsoleLog',
-  'ConsoleWarn',
-  'ConsoleError',
-  'ErrorFunction',
-].includes(type);
+const isPlayableEvent = ({ type }) =>
+  [
+    'EnterFunction',
+    'ExitFunction',
+    'EnqueueMicrotask',
+    'DequeueMicrotask',
+    'InitTimeout',
+    'BeforeTimeout',
+    'Rerender',
+    'ConsoleLog',
+    'ConsoleWarn',
+    'ConsoleError',
+    'ErrorFunction',
+  ].includes(type);
 
 const PRETTY_MUCH_INFINITY = 9999999999;
 
@@ -43,7 +45,7 @@ class App extends Component {
     frames: [],
     markers: [],
     mode: 'editing', // 'editing' | 'running' | 'visualizing'
-    code: '',
+    code: DEFAULT_CODE,
     isAutoPlaying: false,
     currentStep: 'none', // 'none' | 'runTask' | 'runMicrotasks' | 'rerender',
     example: 'none',
@@ -65,7 +67,7 @@ class App extends Component {
   snackbarIds: string[] = [];
 
   componentDidMount() {
-    const code = localStorage.getItem('code') || '';
+    const code = localStorage.getItem('code') || DEFAULT_CODE;
     this.setState({ code });
   }
 
@@ -76,19 +78,27 @@ class App extends Component {
     const { visiblePanels } = this.state;
     const current = visiblePanels[panel];
     this.setState({ visiblePanels: { ...visiblePanels, [panel]: !current } });
-  }
+  };
 
-  handleShowCallStackDescription = () => this.setState({ showCallStackDescription: true });
-  handleHideCallStackDescription = () => this.setState({ showCallStackDescription: false });
+  handleShowCallStackDescription = () =>
+    this.setState({ showCallStackDescription: true });
+  handleHideCallStackDescription = () =>
+    this.setState({ showCallStackDescription: false });
 
-  handleShowEventLoopDescription = () => this.setState({ showEventLoopDescription: true });
-  handleHideEventLoopDescription = () => this.setState({ showEventLoopDescription: false });
+  handleShowEventLoopDescription = () =>
+    this.setState({ showEventLoopDescription: true });
+  handleHideEventLoopDescription = () =>
+    this.setState({ showEventLoopDescription: false });
 
-  handleShowTaskQueueDescription = () => this.setState({ showTaskQueueDescription: true });
-  handleHideTaskQueueDescription = () => this.setState({ showTaskQueueDescription: false });
+  handleShowTaskQueueDescription = () =>
+    this.setState({ showTaskQueueDescription: true });
+  handleHideTaskQueueDescription = () =>
+    this.setState({ showTaskQueueDescription: false });
 
-  handleShowMicrotaskQueueDescription = () => this.setState({ showMicrotaskQueueDescription: true });
-  handleHideMicrotaskQueueDescription = () => this.setState({ showMicrotaskQueueDescription: false });
+  handleShowMicrotaskQueueDescription = () =>
+    this.setState({ showMicrotaskQueueDescription: true });
+  handleHideMicrotaskQueueDescription = () =>
+    this.setState({ showMicrotaskQueueDescription: false });
 
   handleChangeExample = (evt: { target: { value: string } }) => {
     const { value } = evt.target;
@@ -97,16 +107,16 @@ class App extends Component {
       example: evt.target.value,
     });
     this.transitionToEditMode();
-  }
+  };
 
   handleChangeCode = (code: string) => {
     this.setState({ code });
     localStorage.setItem('code', code);
-  }
+  };
 
   handleClickEdit = () => {
     this.transitionToEditMode();
-  }
+  };
 
   handleClickRun = async () => {
     const { code } = this.state;
@@ -127,26 +137,26 @@ class App extends Component {
       this.currEventIdx = 0;
       this.events = events;
       this.setState({ mode: 'visualizing', currentStep: 'evaluateScript' });
-    } catch(e) {
+    } catch (e) {
       this.currEventIdx = 0;
       this.showSnackbar('error', e.message);
       this.setState({ mode: 'editing', currentStep: 'none' });
       console.error(e);
     }
-  }
+  };
 
   handleClickPauseAutoStep = () => {
     this.setState({ isAutoPlaying: false });
-  }
+  };
 
   handleClickAutoStep = () => {
     // TODO: Add isAutoPlaying to state to disable other buttons...
     this.autoPlayEvents();
-  }
+  };
 
   handleClickStep = () => {
     this.playNextEvent();
-  }
+  };
 
   showSnackbar = (variant: 'info' | 'warning' | 'error', msg: string) => {
     const { enqueueSnackbar } = this.props;
@@ -156,20 +166,24 @@ class App extends Component {
       key,
       variant,
       autoHideDuration: PRETTY_MUCH_INFINITY,
-      action: <IconButton color="inherit"><CloseIcon /></IconButton>,
+      action: (
+        <IconButton color="inherit">
+          <CloseIcon />
+        </IconButton>
+      ),
       anchorOrigin: {
         vertical: 'top',
         horizontal: 'right',
       },
     });
-  }
+  };
 
   hideAllSnackbars = () => {
     const { closeSnackbar } = this.props;
     this.snackbarIds.forEach(id => {
       closeSnackbar(null, 'Programmatically hiding all snackbars', id);
     });
-  }
+  };
 
   transitionToEditMode = () => {
     this.hideAllSnackbars();
@@ -182,19 +196,19 @@ class App extends Component {
       isAutoPlaying: false,
       currentStep: 'none',
     });
-  }
+  };
 
   hasReachedEnd = () => this.currEventIdx >= this.events.length;
 
-  getCurrentEvent = () => this.events[this.currEventIdx]
+  getCurrentEvent = () => this.events[this.currEventIdx];
 
   seekToNextPlayableEvent = () => {
-    while (
-      !this.hasReachedEnd() &&
-      !isPlayableEvent(this.getCurrentEvent())
-    ) {
+    while (!this.hasReachedEnd() && !isPlayableEvent(this.getCurrentEvent())) {
       /* Process non-playable event: */
-      const { type, payload: { name, message } } = this.getCurrentEvent();
+      const {
+        type,
+        payload: { name, message },
+      } = this.getCurrentEvent();
       if (type === 'UncaughtError') {
         this.showSnackbar('error', `Uncaught ${name} Exception: ${message}`);
       }
@@ -204,7 +218,7 @@ class App extends Component {
 
       this.currEventIdx += 1;
     }
-  }
+  };
 
   playNextEvent = () => {
     const { markers } = this.state;
@@ -243,11 +257,15 @@ class App extends Component {
     const nextEvent = this.getCurrentEvent();
 
     const currentStep =
-        nextEvent      === undefined          ? 'rerender'
-      : nextEvent.type === 'Rerender'         ? 'rerender'
-      : nextEvent.type === 'BeforeTimeout'    ? 'runTask'
-      : nextEvent.type === 'DequeueMicrotask' ? 'runMicrotasks'
-      : undefined;
+      nextEvent === undefined
+        ? 'rerender'
+        : nextEvent.type === 'Rerender'
+        ? 'rerender'
+        : nextEvent.type === 'BeforeTimeout'
+        ? 'runTask'
+        : nextEvent.type === 'DequeueMicrotask'
+        ? 'runMicrotasks'
+        : undefined;
 
     if (currentStep) this.setState({ currentStep });
 
@@ -258,23 +276,20 @@ class App extends Component {
     ) {
       this.playNextEvent();
     }
-  }
+  };
 
   autoPlayEvents = () => {
     this.setState({ isAutoPlaying: true }, async () => {
-      while (
-        this.state.mode === 'visualizing' &&
-        this.state.isAutoPlaying
-      ) {
+      while (this.state.mode === 'visualizing' && this.state.isAutoPlaying) {
         const endReached = this.playNextEvent();
         if (endReached) {
           this.setState({ isAutoPlaying: false });
           break;
-        };
+        }
         await pause(500);
       }
     });
-  }
+  };
 
   // playEventBackwards = () => {
   //   const { markers } = this.state;
@@ -334,31 +349,31 @@ class App extends Component {
     const { frames } = this.state;
     const newFrames = frames.concat({ id: uuid(), name });
     this.setState({ frames: newFrames });
-  }
+  };
 
   popCallStackFrame = () => {
     const { frames } = this.state;
     const newFrames = frames.slice(0, frames.length - 1);
     this.setState({ frames: newFrames });
-  }
+  };
 
   enqueueMicrotask = (name: string) => {
     const { microtasks } = this.state;
     const newMicrotasks = microtasks.concat({ id: uuid(), name });
     this.setState({ microtasks: newMicrotasks });
-  }
+  };
 
   dequeueMicrotask = () => {
     const { microtasks } = this.state;
     const newMicrotasks = microtasks.slice(1);
     this.setState({ microtasks: newMicrotasks });
-  }
+  };
 
   enqueueTask = (id: number, name: string) => {
     const { tasks } = this.state;
     const newTasks = tasks.concat({ id, name });
     this.setState({ tasks: newTasks });
-  }
+  };
 
   // We can't just pop tasks like we can for the Call Stack and Microtask Queue,
   // because if timers have a delay, their execution order isn't necessarily
@@ -367,10 +382,26 @@ class App extends Component {
     const { tasks } = this.state;
     const newTasks = tasks.filter(task => task.id !== id);
     this.setState({ tasks: newTasks });
-  }
+  };
 
   render() {
-    const { tasks, microtasks, frames, markers, mode, example, code, isAutoPlaying, isDrawerOpen, visiblePanels, currentStep, showCallStackDescription, showEventLoopDescription, showTaskQueueDescription, showMicrotaskQueueDescription } = this.state;
+    const {
+      tasks,
+      microtasks,
+      frames,
+      markers,
+      mode,
+      example,
+      code,
+      isAutoPlaying,
+      isDrawerOpen,
+      visiblePanels,
+      currentStep,
+      showCallStackDescription,
+      showEventLoopDescription,
+      showTaskQueueDescription,
+      showMicrotaskQueueDescription,
+    } = this.state;
 
     return (
       <AppRoot
@@ -407,8 +438,12 @@ class App extends Component {
         onHideEventLoopDescription={this.handleHideEventLoopDescription}
         onShowTaskQueueDescription={this.handleShowTaskQueueDescription}
         onHideTaskQueueDescription={this.handleHideTaskQueueDescription}
-        onShowMicrotaskQueueDescription={this.handleShowMicrotaskQueueDescription}
-        onHideMicrotaskQueueDescription={this.handleHideMicrotaskQueueDescription}
+        onShowMicrotaskQueueDescription={
+          this.handleShowMicrotaskQueueDescription
+        }
+        onHideMicrotaskQueueDescription={
+          this.handleHideMicrotaskQueueDescription
+        }
       />
     );
   }
