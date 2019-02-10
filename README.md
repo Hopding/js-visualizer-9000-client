@@ -1,6 +1,6 @@
 # JavaScript Visualizer 9000
 
-Try it out here: [jsv9000.app](https://jsv9000.app).
+Try it out! [jsv9000.app](https://jsv9000.app)
 
 ![Demo of the JavaScript Visualizer 9000](demo.gif)
 
