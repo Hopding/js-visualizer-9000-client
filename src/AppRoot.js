@@ -21,6 +21,7 @@ import CallStackDescription from './components/CallStackDescription';
 import EventLoopDescription from './components/EventLoopDescription';
 import TaskQueueDescription from './components/TaskQueueDescription';
 import MicrotaskQueueDescription from './components/MicrotaskQueueDescription';
+import Attribution from './components/Attribution';
 
 const theme = createMuiTheme({
   palette: {
@@ -144,7 +145,6 @@ const AppRoot = ({
 |}) => (
   <div style={styles.container}>
     <MuiThemeProvider theme={theme}>
-
       <Drawer
         open={isDrawerOpen}
         visiblePanels={visiblePanels}
@@ -173,23 +173,38 @@ const AppRoot = ({
           locked={mode !== 'editing'}
           onChangeCode={onChangeCode}
         />
+        <Attribution />
       </div>
 
       <div style={styles.rightContainer}>
         <div>
           {visiblePanels.taskQueue && (
-            <TaskQueue title="Task Queue" tasks={tasks} onClickAbout={onShowTaskQueueDescription} />
+            <TaskQueue
+              title="Task Queue"
+              tasks={tasks}
+              onClickAbout={onShowTaskQueueDescription}
+            />
           )}
           {visiblePanels.microtaskQueue && (
-            <TaskQueue title="Microtask Queue" tasks={microtasks} onClickAbout={onShowMicrotaskQueueDescription} />
+            <TaskQueue
+              title="Microtask Queue"
+              tasks={microtasks}
+              onClickAbout={onShowMicrotaskQueueDescription}
+            />
           )}
         </div>
         <div style={styles.bottomRightContainer}>
           {visiblePanels.callStack && (
-            <CallStack frames={frames} onClickAbout={onShowCallStackDescription} />
+            <CallStack
+              frames={frames}
+              onClickAbout={onShowCallStackDescription}
+            />
           )}
           {visiblePanels.eventLoop && (
-            <ExecutionModelStepper step={currentStep} onClickAbout={onShowEventLoopDescription}/>
+            <ExecutionModelStepper
+              step={currentStep}
+              onClickAbout={onShowEventLoopDescription}
+            />
           )}
         </div>
       </div>
@@ -223,7 +238,6 @@ const AppRoot = ({
         open={showMicrotaskQueueDescription}
         onClose={onHideMicrotaskQueueDescription}
       />
-
     </MuiThemeProvider>
   </div>
 );

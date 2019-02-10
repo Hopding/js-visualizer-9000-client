@@ -18,15 +18,15 @@ import pink from '@material-ui/core/colors/pink';
 import blue from '@material-ui/core/colors/blue';
 import yellow from '@material-ui/core/colors/yellow';
 
-const createTheme = (primary) =>createMuiTheme({
-  palette: { primary },
-  typography: { useNextVariants: true },
-});
-
+const createTheme = primary =>
+  createMuiTheme({
+    palette: { primary },
+    typography: { useNextVariants: true },
+  });
 
 const greenTheme = createTheme(green);
 
-const GreenFab = (props) => (
+const GreenFab = props => (
   <MuiThemeProvider theme={greenTheme}>
     <Fab {...props} />
   </MuiThemeProvider>
@@ -34,7 +34,7 @@ const GreenFab = (props) => (
 
 const pinkTheme = createTheme(pink);
 
-const PinkFab = (props) => (
+const PinkFab = props => (
   <MuiThemeProvider theme={pinkTheme}>
     <Fab {...props} />
   </MuiThemeProvider>
@@ -42,7 +42,7 @@ const PinkFab = (props) => (
 
 const blueTheme = createTheme(blue);
 
-const BlueFab = (props) => (
+const BlueFab = props => (
   <MuiThemeProvider theme={blueTheme}>
     <Fab {...props} />
   </MuiThemeProvider>
@@ -50,12 +50,11 @@ const BlueFab = (props) => (
 
 const yellowTheme = createTheme(yellow);
 
-const YellowFab = (props) => (
+const YellowFab = props => (
   <MuiThemeProvider theme={yellowTheme}>
     <Fab {...props} />
   </MuiThemeProvider>
 );
-
 
 const styles = {
   container: {
@@ -67,7 +66,7 @@ const styles = {
     right: 20,
     overflow: 'hidden',
   },
-}
+};
 
 const themedStyles = theme => ({
   fab: {
@@ -105,7 +104,7 @@ const FabControls = ({
   <div style={styles.container}>
     {!isAutoPlaying && (
       <Tooltip
-        style={{ transitionDelay: '100ms' }}
+        style={{ transitionDelay: '50ms' }}
         title="Auto Step"
         aria-label="Auto Step"
         placement="left"
@@ -127,7 +126,7 @@ const FabControls = ({
     )}
     {isAutoPlaying && (
       <Tooltip
-        style={{ transitionDelay: '100ms' }}
+        style={{ transitionDelay: '50ms' }}
         title="Pause Auto Step"
         aria-label="Pause Auto Step"
         placement="left"
@@ -147,7 +146,8 @@ const FabControls = ({
         </div>
       </Tooltip>
     )}
-    <Tooltip
+    {/* Commenting this out until the actually backstep logic is finished */}
+    {/* <Tooltip
       style={{ transitionDelay: '50ms' }}
       title="Step Back"
       aria-label="Step Back"
@@ -166,7 +166,7 @@ const FabControls = ({
           </PinkFab>
         </Zoom>
       </div>
-    </Tooltip>
+    </Tooltip> */}
     <Zoom style={{ transitionDelay: '0ms' }} in={visible}>
       <GreenFab
         color="primary"
