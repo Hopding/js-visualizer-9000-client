@@ -67,7 +67,8 @@ class App extends Component {
   snackbarIds: string[] = [];
 
   componentDidMount() {
-    const code = localStorage.getItem('code') || DEFAULT_CODE;
+    const search = new URLSearchParams(window.location.search);
+    const code = atob(search.get('code') || '') || localStorage.getItem('code') || DEFAULT_CODE;
     this.setState({ code });
   }
 
@@ -112,6 +113,9 @@ class App extends Component {
   handleChangeCode = (code: string) => {
     this.setState({ code });
     localStorage.setItem('code', code);
+
+    const query = new URLSearchParams({ code: btoa(code) });
+    window.history.pushState(null, null, "?" + query.toString());
   };
 
   handleClickEdit = () => {
