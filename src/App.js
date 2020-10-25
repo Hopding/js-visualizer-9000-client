@@ -67,7 +67,8 @@ class App extends Component {
   snackbarIds: string[] = [];
 
   componentDidMount() {
-    const code = localStorage.getItem('code') || DEFAULT_CODE;
+    const search = new URLSearchParams(window.location.search);
+    const code = atob(search.get('code') || '') || localStorage.getItem('code') || DEFAULT_CODE;
     this.setState({ code });
   }
 

@@ -6,7 +6,6 @@ import Tooltip from '@material-ui/core/Tooltip';
 import Zoom from '@material-ui/core/Zoom';
 
 import PlayArrowIcon from '@material-ui/icons/PlayArrow';
-import ReplayIcon from '@material-ui/icons/Replay';
 import FastForwardIcon from '@material-ui/icons/FastForward';
 import PauseIcon from '@material-ui/icons/Pause';
 
@@ -14,7 +13,6 @@ import MuiThemeProvider from '@material-ui/core/styles/MuiThemeProvider';
 import { createMuiTheme } from '@material-ui/core/styles';
 import { withStyles } from '@material-ui/core/styles';
 import green from '@material-ui/core/colors/green';
-import pink from '@material-ui/core/colors/pink';
 import blue from '@material-ui/core/colors/blue';
 import yellow from '@material-ui/core/colors/yellow';
 
@@ -28,14 +26,6 @@ const greenTheme = createTheme(green);
 
 const GreenFab = props => (
   <MuiThemeProvider theme={greenTheme}>
-    <Fab {...props} />
-  </MuiThemeProvider>
-);
-
-const pinkTheme = createTheme(pink);
-
-const PinkFab = props => (
-  <MuiThemeProvider theme={pinkTheme}>
     <Fab {...props} />
   </MuiThemeProvider>
 );

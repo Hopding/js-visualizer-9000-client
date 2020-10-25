@@ -10,6 +10,7 @@ import blueGrey from '@material-ui/core/colors/blueGrey';
 
 import Header from './components/Header';
 import RunOrEditButton from './components/RunOrEditButton';
+import ShareButton from './components/ShareButton';
 import ExampleSelector from './components/ExampleSelector';
 import CodeEditor from './components/CodeEditor';
 import CallStack from './components/CallStack';
@@ -166,6 +167,7 @@ const AppRoot = ({
             onClickRun={onClickRun}
             onClickEdit={onClickEdit}
           />
+          <ShareButton code={code} />
         </div>
         <CodeEditor
           code={code}
